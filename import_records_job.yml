@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dtol-cronjob
+spec:
+  schedule: "* 0 * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        ms: dtol-cronjob
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: main
+        image: alexeyebi/dtol-cronjob

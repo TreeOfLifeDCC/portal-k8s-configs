@@ -1,0 +1,2 @@
+python import_records.py
+python import_statuses.py
