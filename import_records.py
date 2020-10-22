@@ -1,5 +1,4 @@
 import requests
-import json
 from lxml import etree
 from elasticsearch import Elasticsearch
 
@@ -22,9 +21,9 @@ def main():
     source_primary_accessions = parse_source_primary_accessions(
         secondary_related_projects)
     biosamples = parse_biosamples(source_primary_accessions)
+    existing_data = get_existing_data()
     for _, sample in biosamples.items():
-        parse_biosamples_data(sample)
-        break
+        parse_biosamples_data(sample, existing_data)
 
 
 def parse_related_projects(root_xml):
@@ -61,7 +60,7 @@ def parse_biosamples(primary_accessions):
     return biosamples
 
 
-def parse_biosamples_data(sample):
+def parse_biosamples_data(sample, existing_data):
     sample_to_submit = dict()
     # Parse mandatory attributes
     sample_to_submit['accession'] = sample['accession']
@@ -79,16 +78,48 @@ def parse_biosamples_data(sample):
     # parse customField
     sample_to_submit['customField'] = parse_custom_fields(
         sample['characteristics'])
+    if 'externalReferences' in sample:
+        sample_to_submit['customField'].append({
+            'name': 'externalReferences',
+            'value': sample['externalReferences'][0]['url']
+        })
+    sample_to_submit['customField'].append({
+        'name': 'releaseDate',
+        'value': sample['releaseDate']
+    })
+    sample_to_submit['customField'].append({
+        'name': 'updateDate',
+        'value': sample['updateDate']
+    })
 
     # parse experiment
     sample_to_submit['experiment'] = parse_experiments(sample['accession'])
+
+    # parse assemblies
+    sample_to_submit['assemblies'] = parse_assemblies(sample['accession'])
+
+    # parse annotations
+    # TODO: parse ENSEMBL annotations
+    sample_to_submit['annotation'] = parse_annotation(sample['accession'])
 
     # parse relationships
     sample_to_submit['relationship'] = sample['relationships']
 
     # TODO: check tracking system status
     sample_to_submit['trackingSystem'] = get_tracking_status(sample)
-    print(json.dumps(sample_to_submit))
+    if sample_to_submit['accession'] in existing_data:
+        es.index('dtol', sample_to_submit, id=existing_data[
+            sample_to_submit['accession']])
+    else:
+        es.index('dtol', sample_to_submit)
+
+
+def get_existing_data():
+    existing_data = dict()
+    data = es.search(index='dtol', size=10000)
+    for record in data['hits']['hits']:
+        existing_data[record['_source']['accession']] = record['_id']
+    return existing_data
 
 
 def check_field_existence(data, field_name):
@@ -145,7 +176,10 @@ def parse_experiments(sample_id):
                                         f'cram_index_aspera,cram_index_galaxy,'
                                         f'sample_alias,broker_name,'
                                         f'sample_title,nominal_sdev,'
-                                        f'first_created').json()
+                                        f'first_created')
+    if experiments_data.status_code != 200:
+        return experiments
+    experiments_data = experiments_data.json()
     for experiment in experiments_data:
         tmp = dict()
         tmp['experiment_accession'] = experiment['experiment_accession']
@@ -159,6 +193,25 @@ def parse_experiments(sample_id):
         tmp['tax_id'] = experiment['tax_id']
         experiments.append(tmp)
     return experiments
+
+
+def parse_assemblies(sample_id):
+    assemblies = list()
+    assemblies_data = requests.get(f"https://www.ebi.ac.uk/ena/portal/api/"
+                                   f"links/sample?format=json"
+                                   f"&accession={sample_id}&result=assembly"
+                                   f"&offset=0&limit=1000")
+    if assemblies_data.status_code != 200:
+        return assemblies
+    assemblies_data = assemblies_data.json()
+    for assembly in assemblies_data:
+        assemblies.append(assembly)
+    return assemblies
+
+
+def parse_annotation(sample_id):
+    annotations = list()
+    return annotations
 
 
 def get_tracking_status(sample):
