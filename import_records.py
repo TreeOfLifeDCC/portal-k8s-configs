@@ -91,6 +91,7 @@ def parse_biosamples_data(sample, existing_data):
         'name': 'updateDate',
         'value': sample['updateDate']
     })
+    sample_to_submit['releaseDate'] = sample['releaseDate']
 
     # parse experiment
     sample_to_submit['experiment'] = parse_experiments(sample['accession'])
@@ -191,6 +192,13 @@ def parse_experiments(sample_id):
         tmp['submitted_ftp'] = [
             file for file in experiment['submitted_ftp'].split(";")]
         tmp['tax_id'] = experiment['tax_id']
+        tmp['instrument_platform'] = experiment['instrument_platform']
+        tmp['instrument_model'] = experiment['instrument_model']
+        tmp['library_layout'] = experiment['library_layout']
+        tmp['library_strategy'] = experiment['library_strategy']
+        tmp['library_source'] = experiment['library_source']
+        tmp['library_selection'] = experiment['library_selection']
+        tmp['first_public'] = experiment['first_public']
         experiments.append(tmp)
     return experiments
 

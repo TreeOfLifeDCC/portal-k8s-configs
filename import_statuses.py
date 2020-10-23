@@ -11,6 +11,11 @@ def main():
         tmp['organism'] = record['_source']['organism']
         tmp['commonName'] = record['_source']['commonName']
         tmp['biosamples'] = 'Done'
+        tmp['biosamples_date'] = get_biosamples_date(
+            record['_source']['customField'])
+        tmp['ena_date'] = record['_source']['experiment'][0]['first_public']
+        # TODO: add an ENSEMBL check
+        tmp['annotation_date'] = None
         tmp['raw_data'] = check_raw_data_status(record['_source']['experiment'])
         tmp['mapped_reads'] = check_mapped_reads_status(record['_source'][
                                                             'experiment'])
@@ -21,6 +26,12 @@ def main():
             es.index('statuses', tmp, id=existing_data[tmp['organism']])
         else:
             es.index('statuses', tmp)
+
+
+def get_biosamples_date(record):
+    for item in record:
+        if item['name'] == 'releaseDate':
+            return item['value']
 
 
 def get_existing_data():
