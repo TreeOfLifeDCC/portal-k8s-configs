@@ -101,13 +101,15 @@ def parse_biosamples_data(sample, existing_data):
 
     # parse annotations
     # TODO: parse ENSEMBL annotations
-    sample_to_submit['annotation'] = parse_annotation(sample['accession'])
+    sample_to_submit['annotation'] = parse_annotation(
+        sample_to_submit['organism'])
 
     # parse relationships
     sample_to_submit['relationship'] = sample['relationships']
 
     # TODO: check tracking system status
-    sample_to_submit['trackingSystem'] = get_tracking_status(sample)
+    sample_to_submit['trackingSystem'] = get_tracking_status(
+        sample_to_submit['organism'])
     if sample_to_submit['accession'] in existing_data:
         es.index('dtol', sample_to_submit, id=existing_data[
             sample_to_submit['accession']])
@@ -218,12 +220,22 @@ def parse_assemblies(sample_id):
 
 
 def parse_annotation(sample_id):
-    annotations = list()
-    return annotations
+    if sample_id == 'Salmo trutta':
+        return 'https://www.ensembl.org/Salmo_trutta/Info/Index'
+    elif sample_id == 'Sciurus vulgaris':
+        return 'https://www.ensembl.org/Sciurus_vulgaris/Info/Index'
+    elif sample_id == 'Aquila chrysaetos chrysaetos':
+        return 'https://www.ensembl.org/Aquila_chrysaetos_chrysaetos/Info/Index'
+    else:
+        return None
 
 
 def get_tracking_status(sample):
-    return 'In Progress'
+    if sample == 'Salmo trutta' or sample == 'Sciurus vulgaris' \
+            or sample == 'Aquila chrysaetos chrysaetos':
+        return 'annotation complete'
+    else:
+        return 'awaiting all data for annotation'
 
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ def main():
         tmp['assemblies'] = check_assemblies(record['_source']['assemblies'])
         # TODO: add an ENSEMBL check
         tmp['annotation'] = 'Waiting'
+        tmp['annotation_complete'] = check_annotation_complete(tmp['organism'])
         if tmp['organism'] in existing_data:
             es.index('statuses', tmp, id=existing_data[tmp['organism']])
         else:
@@ -61,6 +62,14 @@ def check_mapped_reads_status(record):
 # TODO: refactor
 def check_assemblies(record):
     if len(record) != 0:
+        return 'Done'
+    else:
+        return 'Waiting'
+
+
+def check_annotation_complete(record):
+    if record == 'Salmo trutta' or record == 'Sciurus vulgaris' \
+            or record == 'Aquila chrysaetos chrysaetos':
         return 'Done'
     else:
         return 'Waiting'
