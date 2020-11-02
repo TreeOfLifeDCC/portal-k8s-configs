@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    ms: dtol-back-end
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: back-end-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        ms: dtol-back-end
+    spec:
+      containers:
+      - name: dtol-back-end
+        image: alexeyebi/dtol_backend
+        ports:
+        - containerPort: 80

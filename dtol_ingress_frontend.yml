@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-portal-frontend
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - portal.darwintreeoflife.org
+    secretName: tls-secret
+  rules:
+  - host: portal.darwintreeoflife.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: portal-frontend
+          servicePort: 80
