@@ -24,17 +24,18 @@ def import_records():
         "https://www.ebi.ac.uk/biosamples/samples?size=10000&"
         "filter=attr%3Aproject%20name%3ADTOL").json()
     for sample in samples['_embedded']['samples']:
-        parse_record(sample['characteristics'], sample['accession'])
+        parse_record(sample['characteristics'], sample['accession'],
+                     sample['taxId'])
 
 
-def parse_record(sample, accession):
+def parse_record(sample, accession, taxon_id):
     # index = 'organisms' if sample['organism part'][0]['text'] \
     #                        in organism_terms else 'specimens'
     index = 'organisms'
     record = dict()
     # Mandatory fields
     record['accession'] = accession
-    record['taxonId'] = sample['taxId']
+    record['taxonId'] = taxon_id
     record['organismPart'] = sample['organism part'][0]['text']
     record['lifestage'] = check_field_existence(sample, 'lifestage')
     record['projectName'] = sample['project name'][0]['text']
