@@ -54,7 +54,7 @@ def parse_record(sample, accession, taxon_id):
     record['geographicLocationRegionAndLocality'] = sample[
         'geographic location (region and locality)'][0]['text']
     record['identifiedBy'] = sample['identified by'][0]['text']
-    record['habitat'] = sample['habitat'][0]['text']
+    record['habitat'] = check_field_existence(sample, 'habitat')
     record['identifierAffiliation'] = sample[
         'identifier_affiliation'][0]['text']
     record['sex'] = check_field_existence(sample, 'sex')
