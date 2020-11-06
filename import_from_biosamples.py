@@ -5,21 +5,35 @@ es = Elasticsearch(['elasticsearch:9200'])
 
 organism_terms = ['WHOLE ORGANISM', 'MYCELIUM', 'WHOLE PLANT']
 
+checklist_fields = ['taxId', 'organism part', 'lifestage', 'project name',
+                    'collected by', 'collection date',
+                    'geographic location (country and/or sea)',
+                    'geographic location (latitude)',
+                    'geographic location (longitude)',
+                    'geographic location (region and locality)',
+                    'identified by', 'habitat', 'identifier_affiliation',
+                    'sex', 'collecting institution', 'GAL', 'specimen voucher',
+                    'specimen id', 'GAL_sample_id', 'organism',
+                    'geographic location (depth)',
+                    'geographic location (elevation)', 'sample derived from',
+                    'relationship', 'culture or strain id']
+
 
 def import_records():
     samples = requests.get(
         "https://www.ebi.ac.uk/biosamples/samples?size=10000&"
         "filter=attr%3Aproject%20name%3ADTOL").json()
     for sample in samples['_embedded']['samples']:
-        parse_record(sample['characteristics'])
+        parse_record(sample['characteristics'], sample['accession'])
 
 
-def parse_record(sample):
-    index = 'organisms' if sample['organism part'][0]['text'] \
-                           in organism_terms else 'specimens'
+def parse_record(sample, accession):
+    # index = 'organisms' if sample['organism part'][0]['text'] \
+    #                        in organism_terms else 'specimens'
+    index = 'organisms'
     record = dict()
     # Mandatory fields
-    record['accession'] = sample['accession']
+    record['accession'] = accession
     record['taxonId'] = sample['taxId']
     record['organismPart'] = sample['organism part'][0]['text']
     record['lifestage'] = check_field_existence(sample, 'lifestage')
@@ -71,8 +85,13 @@ def parse_record(sample):
     record['assemblies'] = list()
     record['trackingSystem'] = 'Submitted to BioSamples'
     record['etag'] = get_etag(record['accession'])
-    if index == 'organisms':
-        record['specimens'] = list()
+
+    # parse custom fields (those that are not in checklist)
+    record['customFields'] = list()
+    for k, v in sample.items():
+        custom_field = parse_custom_fields(k, v)
+        if custom_field:
+            record['customFields'].append(custom_field)
 
     # Write data to ES
     es.index(index, record, id=record['accession'])
@@ -127,6 +146,14 @@ def get_etag(biosamples_id):
 # TODO: check etag
 def check_sample_exists(biosamples_id):
     pass
+
+
+def parse_custom_fields(field_key, field_value):
+    if field_key not in checklist_fields:
+        return {
+            'name': field_key,
+            'value': field_value[0]['text']
+        }
 
 
 if __name__ == "__main__":
