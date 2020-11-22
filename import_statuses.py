@@ -4,27 +4,35 @@ es = Elasticsearch(['elasticsearch:9200'])
 
 
 def main():
-    data = es.search(index='dtol', size=10000)
+    data = es.search(index='organisms', size=10000)
     existing_data = get_existing_data()
     for record in data['hits']['hits']:
         tmp = dict()
-        tmp['organism'] = record['_source']['organism']
+        print(record)
+        tmp['organism'] = record['_source']['organism']['text']
         tmp['commonName'] = record['_source']['commonName']
         tmp['biosamples'] = 'Done'
         tmp['biosamples_date'] = get_biosamples_date(
-            record['_source']['customField'])
-        tmp['ena_date'] = record['_source']['experiment'][0]['first_public']
+            record['_source']['customFields'])
+        if len(record['_source']['experiment']):
+            tmp['ena_date'] = record['_source']['experiment'][0]['first_public']
+        else:
+            tmp['ena_date'] = None
         # TODO: add an ENSEMBL check
         tmp['annotation_date'] = None
-        tmp['raw_data'] = check_raw_data_status(record['_source']['experiment'])
-        tmp['mapped_reads'] = check_mapped_reads_status(record['_source'][
-                                                            'experiment'])
+        if len(record['_source']['experiment']):
+            tmp['raw_data'] = check_raw_data_status(record['_source']['experiment'])
+            tmp['mapped_reads'] = check_mapped_reads_status(record['_source']['experiment'])
+        else:
+            tmp['raw_data'] = None
+            tmp['mapped_reads'] = None
         tmp['assemblies'] = check_assemblies(record['_source']['assemblies'])
         # TODO: add an ENSEMBL check
         tmp['annotation'] = 'Waiting'
         tmp['annotation_complete'] = check_annotation_complete(tmp['organism'])
         if tmp['organism'] in existing_data:
-            es.index('statuses', tmp, id=existing_data[tmp['organism']])
+            # es.index('statuses', tmp, id=existing_data[tmp['organism']])
+            pass
         else:
             es.index('statuses', tmp)
 
