@@ -1,2 +1,2 @@
-python import_records.py
+python import_from_biosamples.py
 python import_statuses.py
