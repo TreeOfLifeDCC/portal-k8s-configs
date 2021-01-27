@@ -1,0 +1,130 @@
+CURL -X PUT "http://45.86.170.227:31664/new_index" -H "Content-Type: application/json" -d '
+{
+	"settings": {
+		"max_result_window": 1000000,
+		"analysis": {
+			"normalizer": {
+                "lower_case_normalizer": {
+                  "type": "custom",
+                  "filter": ["lowercase"]
+                }
+              }
+		}
+	},
+	"mappings": {
+		"properties": {
+			"commonName": {
+				"type": "keyword",
+				"fields": {
+                    "normalize": {
+                        "type": "keyword",
+                        "normalizer": "lower_case_normalizer"
+                    },
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                }
+			},
+			"organism": {
+				"type": "keyword",
+				"fields": {
+                    "normalize": {
+                        "type": "keyword",
+                        "normalizer": "lower_case_normalizer"
+                    },
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                }
+			},
+			"records": {
+				"type": "nested",
+				"properties": {
+					"accession": {
+						"type": "keyword"
+					},
+					"commonName": {
+						"type": "keyword",
+						"fields": {
+                            "normalize": {
+                                "type": "keyword",
+                                "normalizer": "lower_case_normalizer"
+                            },
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        }
+					},
+					"organism": {
+						"type": "nested",
+						"properties": {
+							"ontologyTerm": {
+								"type": "keyword"
+							},
+							"text": {
+								"type": "keyword",
+								"fields": {
+                                    "normalize": {
+                                        "type": "keyword",
+                                        "normalizer": "lower_case_normalizer"
+                                    },
+                                    "keyword": {
+                                        "type": "keyword"
+                                    }
+                                }
+							}
+						}
+					},
+					"organismPart": {
+						"type": "keyword",
+						"fields": {
+                            "normalize": {
+                                "type": "keyword",
+                                "normalizer": "lower_case_normalizer"
+                            },
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        }
+					},
+					"sex": {
+						"type": "keyword",
+						"fields": {
+                            "normalize": {
+                                "type": "keyword",
+                                "normalizer": "lower_case_normalizer"
+                            },
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        }
+					},
+					"trackingSystem": {
+						"type": "keyword",
+						"fields": {
+                            "normalize": {
+                                "type": "keyword",
+                                "normalizer": "lower_case_normalizer"
+                            },
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        }
+					}
+				}
+			},
+			"trackingSystem": {
+				"type": "keyword",
+				"fields": {
+                    "normalize": {
+                        "type": "keyword",
+                        "normalizer": "lower_case_normalizer"
+                    },
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                }
+			}
+		}
+	}
+}'
