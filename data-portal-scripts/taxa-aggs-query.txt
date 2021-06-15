@@ -1,0 +1,422 @@
+{
+    "size":0,
+	"aggregations": 
+    {
+		"kingdom": {
+			"nested": {
+				"path": "taxonomies.kingdom"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.kingdom.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subkingdom": {
+			"nested": {
+				"path": "taxonomies.subkingdom"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subkingdom.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "superphylum": {
+			"nested": {
+				"path": "taxonomies.superphylum"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.superphylum.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "phylum": {
+			"nested": {
+				"path": "taxonomies.phylum"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.phylum.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subphylum": {
+			"nested": {
+				"path": "taxonomies.subphylum"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subphylum.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "superclass": {
+			"nested": {
+				"path": "taxonomies.superclass"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.superclass.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "class": {
+			"nested": {
+				"path": "taxonomies.class"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.class.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subclass": {
+			"nested": {
+				"path": "taxonomies.subclass"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subclass.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "infraclass": {
+			"nested": {
+				"path": "taxonomies.infraclass"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.infraclass.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "cohort": {
+			"nested": {
+				"path": "taxonomies.cohort"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.cohort.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subcohort": {
+			"nested": {
+				"path": "taxonomies.subcohort"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subcohort.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "superorder": {
+			"nested": {
+				"path": "taxonomies.superorder"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.superorder.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "order": {
+			"nested": {
+				"path": "taxonomies.order"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.order.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "parvorder": {
+			"nested": {
+				"path": "taxonomies.parvorder"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.parvorder.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "suborder": {
+			"nested": {
+				"path": "taxonomies.suborder"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.suborder.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "infraorder": {
+			"nested": {
+				"path": "taxonomies.infraorder"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.infraorder.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "section": {
+			"nested": {
+				"path": "taxonomies.section"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.section.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subsection": {
+			"nested": {
+				"path": "taxonomies.subsection"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subsection.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "superfamily": {
+			"nested": {
+				"path": "taxonomies.superfamily"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.superfamily.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "family": {
+			"nested": {
+				"path": "taxonomies.family"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.family.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subfamily": {
+			"nested": {
+				"path": "taxonomies.subfamily"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subfamily.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "tribe": {
+			"nested": {
+				"path": "taxonomies.tribe"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.tribe.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subtribe": {
+			"nested": {
+				"path": "taxonomies.subtribe"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subtribe.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "genus": {
+			"nested": {
+				"path": "taxonomies.genus"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.genus.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "series": {
+			"nested": {
+				"path": "taxonomies.series"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.series.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subgenus": {
+			"nested": {
+				"path": "taxonomies.subgenus"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subgenus.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "species_group": {
+			"nested": {
+				"path": "taxonomies.species_group"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.species_group.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "species_subgroup": {
+			"nested": {
+				"path": "taxonomies.species_subgroup"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.species_subgroup.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "species": {
+			"nested": {
+				"path": "taxonomies.species"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.species.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "subspecies": {
+			"nested": {
+				"path": "taxonomies.subspecies"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.subspecies.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "varietas": {
+			"nested": {
+				"path": "taxonomies.varietas"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.varietas.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		},
+        "forma": {
+			"nested": {
+				"path": "taxonomies.forma"
+			},
+			"aggs": {
+				"scientificName": {
+					"terms": {
+						"field": "taxonomies.forma.scientificName",
+						"size": 20000
+					}
+				}
+			}
+		}
+	}
+}

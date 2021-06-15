@@ -1,0 +1,218 @@
+[{
+        "organism": "Aquila chrysaetos chrysaetos",
+        "annotation": [{
+                "accession": "GCA_900496995.2",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2/geneset/2019_07/Aquila_chrysaetos_chrysaetos-GCA_900496995.2-2019_07-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2/geneset/2019_07/Aquila_chrysaetos_chrysaetos-GCA_900496995.2-2019_07-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2/geneset/2019_07/Aquila_chrysaetos_chrysaetos-GCA_900496995.2-2019_07-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2/geneset/2019_07/Aquila_chrysaetos_chrysaetos-GCA_900496995.2-2019_07-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2/genome/Aquila_chrysaetos_chrysaetos-GCA_900496995.2-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Aquila_chrysaetos_chrysaetos/GCA_900496995.2"
+                },
+                "view_in_browser": "https://www.ensembl.org/Aquila_chrysaetos_chrysaetos/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "organism": "Arvicola amphibius",
+        "annotation": [{
+                "accession": "GCA_903992535.1",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1/geneset/2020_12/Arvicola_amphibius-GCA_903992535.1-2020_12-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1/geneset/2020_12/Arvicola_amphibius-GCA_903992535.1-2020_12-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1/geneset/2020_12/Arvicola_amphibius-GCA_903992535.1-2020_12-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1/geneset/2020_12/Arvicola_amphibius-GCA_903992535.1-2020_12-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1/genome/Arvicola_amphibius-GCA_903992535.1-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Arvicola_amphibius/GCA_903992535.1"
+                },
+                "view_in_browser": "https://rapid.ensembl.org/Arvicola_amphibius_gca903992535v1/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "organism": "Asterias rubens",
+        "annotation": [{
+                "accession": "GCA_902459465.3",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3/geneset/2020_11/Asterias_rubens-GCA_902459465.3-2020_11-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3/geneset/2020_11/Asterias_rubens-GCA_902459465.3-2020_11-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3/geneset/2020_11/Asterias_rubens-GCA_902459465.3-2020_11-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3/geneset/2020_11/Asterias_rubens-GCA_902459465.3-2020_11-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3/genome/Asterias_rubens-GCA_902459465.3-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Asterias_rubens/GCA_902459465.3"
+                },
+                "view_in_browser": "https://rapid.ensembl.org/Asterias_rubens_gca902459465v3/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "organism": "Rattus norvegicus",
+        "annotation": [{
+                "accession": "GCA_015227675.2",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2/geneset/2021_02/Rattus_norvegicus-GCA_015227675.2-2021_02-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2/geneset/2021_02/Rattus_norvegicus-GCA_015227675.2-2021_02-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2/geneset/2021_02/Rattus_norvegicus-GCA_015227675.2-2021_02-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2/geneset/2021_02/Rattus_norvegicus-GCA_015227675.2-2021_02-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2/genome/Rattus_norvegicus-GCA_015227675.2-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Rattus_norvegicus/GCA_015227675.2"
+                },
+                "view_in_browser": "https://rapid.ensembl.org/Rattus_norvegicus_gca015227675v2/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "organism": "Salmo trutta",
+        "annotation": [{
+                "accession": "GCA_901001165.1",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/release-103/gtf/salmo_trutta/Salmo_trutta.fSalTru1.1.103.gtf.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/release-103/gff3/salmo_trutta/Salmo_trutta.fSalTru1.1.103.gff3.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/release-103/fasta/salmo_trutta/pep/Salmo_trutta.fSalTru1.1.pep.all.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/release-103/fasta/salmo_trutta/cdna/Salmo_trutta.fSalTru1.1.cdna.all.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/release-103/fasta/salmo_trutta/dna/Salmo_trutta.fSalTru1.1.dna_sm.toplevel.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/release-103"
+                },
+                "view_in_browser": "https://www.ensembl.org/Salmo_trutta/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "organism": "Sciurus carolinensis",
+        "annotation": [{
+                "accession": "GCA_902686445.2",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2/geneset/2020_12/Sciurus_carolinensis-GCA_902686445.2-2020_12-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2/geneset/2020_12/Sciurus_carolinensis-GCA_902686445.2-2020_12-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2/geneset/2020_12/Sciurus_carolinensis-GCA_902686445.2-2020_12-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2/geneset/2020_12/Sciurus_carolinensis-GCA_902686445.2-2020_12-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2/genome/Sciurus_carolinensis-GCA_902686445.2-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_carolinensis/GCA_902686445.2"
+                },
+                "view_in_browser": "https://rapid.ensembl.org/Sciurus_carolinensis_gca902686445v2/Info/Index"
+            }
+
+        ]
+    },
+    {
+        "annotation": [{
+                "accession": "GCA_902686455.1",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1/geneset/2020_01/Sciurus_vulgaris-GCA_902686455.1-2020_01-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1/geneset/2020_01/Sciurus_vulgaris-GCA_902686455.1-2020_01-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1/geneset/2020_01/Sciurus_vulgaris-GCA_902686455.1-2020_01-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1/geneset/2020_01/Sciurus_vulgaris-GCA_902686455.1-2020_01-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1/genome/Sciurus_vulgaris-GCA_902686455.1-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.1"
+                },
+                "view_in_browser": "https://www.ensembl.org/Sciurus_vulgaris/Info/Index"
+            },
+            {
+                "accession": "GCA_902686455.2",
+                "annotation": {
+                    "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2/geneset/2020_12/Sciurus_vulgaris-GCA_902686455.2-2020_12-genes.gff3.gz",
+                    "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2/geneset/2020_12/Sciurus_vulgaris-GCA_902686455.2-2020_12-genes.gtf.gz"
+                },
+                "proteins": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2/geneset/2020_12/Sciurus_vulgaris-GCA_902686455.2-2020_12-pep.fa.gz"
+                },
+                "transcripts": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2/geneset/2020_12/Sciurus_vulgaris-GCA_902686455.2-2020_12-cdna.fa.gz"
+                },
+                "softmasked_genome": {
+                    "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2/genome/Sciurus_vulgaris-GCA_902686455.2-softmasked.fa.gz"
+                },
+                "other_data": {
+                    "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Sciurus_vulgaris/GCA_902686455.2"
+                },
+                "view_in_browser": "https://rapid.ensembl.org/Sciurus_vulgaris_gca902686455v2/Info/Index"
+            }
+        ],
+    },
+    {
+        "organism": "Trachurus trachurus",
+        "annotation": [{
+            "accession": "GCA_905171665.1",
+            "annotation": {
+                "GTF": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1/geneset/2021_03/Trachurus_trachurus-GCA_905171665.1-2021_03-genes.gff3.gz",
+                "GFF3": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1/geneset/2021_03/Trachurus_trachurus-GCA_905171665.1-2021_03-genes.gtf.gz"
+            },
+            "proteins": {
+                "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1/geneset/2021_03/Trachurus_trachurus-GCA_905171665.1-2021_03-pep.fa.gz"
+            },
+            "transcripts": {
+                "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1/geneset/2021_03/Trachurus_trachurus-GCA_905171665.1-2021_03-cdna.fa.gz"
+            },
+            "softmasked_genome": {
+                "FASTA": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1/genome/Trachurus_trachurus-GCA_905171665.1-softmasked.fa.gz"
+            },
+            "other_data": {
+                "ftp_dumps": "http://ftp.ensembl.org/pub/rapid-release/species/Trachurus_trachurus/GCA_905171665.1"
+            },
+            "view_in_browser": "https://rapid.ensembl.org/Trachurus_trachurus_gca905171665v1/Info/Index"
+        }]
+    }
+
+]
