@@ -16,12 +16,10 @@ spec:
       protocol: TCP
       targetPort: 9300
   type: NodePort
-
   selector:
     run: elasticsearch
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,13 +35,14 @@ spec:
       labels:
         run: elasticsearch
     spec:
+      securityContext:
+        fsGroup: 2000
       containers:
-        - image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+        - image: dockerhub.ebi.ac.uk/treeoflifedcc/portal-elastic/elasticsearch-s3:7.13.2
           name: elasticsearch
           volumeMounts:
-          # Volume 'data' is mounted to path '/data'
-          - name: data 
-            mountPath: "/data"
+            - name: data
+              mountPath: "usr/share/elasticsearch/data"
           imagePullPolicy: IfNotPresent
           env:
             - name: discovery.type
@@ -51,10 +50,12 @@ spec:
             - name: cluster.name
               value: elasticsearch
           ports:
-          - containerPort: 9300
-            name: nodes
-          - containerPort: 9200
-            name: client
+            - containerPort: 9300
+              name: nodes
+            - containerPort: 9200
+              name: client
+      imagePullSecrets:
+        - name: ebi-docker-registry
       volumes:
         - name: data
           persistentVolumeClaim:
