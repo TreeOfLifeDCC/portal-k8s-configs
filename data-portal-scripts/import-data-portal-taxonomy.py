@@ -25,7 +25,7 @@ with open('ranks.txt', 'r') as f:
         line = line.rstrip()
         ranks.append(line)
 for organism in data_portal['hits']['hits']:
-    if(organism['_id'] != "Asterina gibbosa (Pennant, 1777)" and organism['_id'] != "Inachis io"):
+    if(organism['_id'] != "Inachis io"):
         tax_id = mappings[organism['_id']]
         organism_id = organism['_id']
         organism = organism['_source']
@@ -47,3 +47,14 @@ for organism in data_portal['hits']['hits']:
                 if taxon.get('commonName'):
                     organism['taxonomies'][rank]['commonName'] = taxon.get('commonName')
         es.index('data_portal_index', organism, id=organism_id)
+    else:
+        if(organism['_id'] == "Inachis io"):
+            tax_id = mappings[organism['_id']]
+            organism_id = organism['_id']
+            organism = organism['_source']
+            organism['tax_id'] = 0
+            organism['taxonomies'] = dict()        
+            for rank in ranks:
+                taxa = {'scientificName': 'Other', 'commonName': 'Other'}
+                organism['taxonomies'][rank] = taxa
+            es.index('data_portal_index', organism, id=organism_id)
