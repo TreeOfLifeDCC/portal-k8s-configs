@@ -6,9 +6,9 @@ from elasticsearch import Elasticsearch
 from neo4j import GraphDatabase
 from neo4jConnection import Neo4jConnection
 
-conn = Neo4jConnection(uri="bolt://localhost:7687", 
+conn = Neo4jConnection(uri="bolt://45.86.170.227:31552", 
                        user="neo4j",              
-                       pwd="123")
+                       pwd="DtolNeo4jAdminUser@123")
 es = Elasticsearch(hosts=["45.86.170.227:31664"])
 taxaOrderObj = {}
 taxonomiesList = list()
@@ -16,7 +16,7 @@ aggregationsResp = dict()
 indexCounter = 2
 taxonomiesOmitted = []
 
-taxonomiesList.append({"id":1, "name":"Eukaryota", "rank":"superkingdom", "size":1562, "parentId":1})
+taxonomiesList.append({"id":1, "name":"Eukaryota", "rank":"superkingdom", "size":1562, "parentId":0})
 taxaOrderObj["Eukaryota"] = 1
 kingdomRanks = ['Metazoa','Viridiplantae','Fungi']
 taxaRankArray = ["kingdom","subkingdom","superphylum","phylum","subphylum","superclass","class","subclass","infraclass","cohort","subcohort","superorder","order","parvorder","suborder","infraorder","section","subsection","superfamily","family","subfamily","tribe","subtribe","genus","series","subgenus","species_group","species_subgroup","species","subspecies","varietas","forma"]
@@ -70,6 +70,9 @@ for rank in taxaRankArray:
                 taxonomiesOmitted.append(scientificName)
 print('taxonomies ommitted', taxonomiesOmitted)
 conn.query(neo4jQuery, parameters = {'taxaArray':taxonomiesList})
-                           
+
+with open('taxonomies.json', 'w') as f:
+    f.write(str(taxonomiesList))
+                          
 with open('taxonomies-omited.txt', 'w') as f:
     f.write(str(taxonomiesOmitted))
