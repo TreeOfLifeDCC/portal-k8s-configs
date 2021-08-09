@@ -1,83 +1,55 @@
 from elasticsearch import Elasticsearch
 
+from common_functions import get_samples
+
 es = Elasticsearch(['elasticsearch:9200'])
 
 
 def main():
-    data = es.search(index='organisms', size=10000)
-    existing_data = get_existing_data()
-    for record in data['hits']['hits']:
+    data_portal_samples = get_samples('data_portal_index')
+    for organism, record in data_portal_samples.items():
         tmp = dict()
-        print(record)
-        tmp['organism'] = record['_source']['organism']['text']
-        tmp['commonName'] = record['_source']['commonName']
+        tmp['organism'] = record['organism']
+        tmp['commonName'] = record['commonName']
         tmp['biosamples'] = 'Done'
-        tmp['biosamples_date'] = get_biosamples_date(
-            record['_source']['customFields'])
-        if len(record['_source']['experiment']):
-            tmp['ena_date'] = record['_source']['experiment'][0]['first_public']
-        else:
-            tmp['ena_date'] = None
-        # TODO: add an ENSEMBL check
+        tmp['biosamples_date'] = None
+        tmp['ena_date'] = None
         tmp['annotation_date'] = None
-        if len(record['_source']['experiment']):
-            tmp['raw_data'] = check_raw_data_status(record['_source']['experiment'])
-            tmp['mapped_reads'] = check_mapped_reads_status(record['_source']['experiment'])
-        else:
-            tmp['raw_data'] = None
-            tmp['mapped_reads'] = None
-        tmp['assemblies'] = check_assemblies(record['_source']['assemblies'])
-        # TODO: add an ENSEMBL check
+        tmp['raw_data'] = check_raw_data_status(record)
+        tmp['mapped_reads'] = tmp['raw_data']
+        tmp['assemblies'] = check_assemblies(record)
         tmp['annotation'] = 'Waiting'
-        tmp['annotation_complete'] = check_annotation_complete(tmp['organism'])
-        if tmp['organism'] in existing_data:
-            # es.index('statuses', tmp, id=existing_data[tmp['organism']])
-            pass
-        else:
-            es.index('statuses', tmp)
+        tmp['annotation_complete'] = check_annotation_complete(record)
+        tmp['trackingSystem'] = [
+            {'name': 'biosamples', 'status': 'Done', 'rank': 1},
+            {'name': 'mapped_reads', 'status': tmp['mapped_reads'], 'rank': 2},
+            {'name': 'assemblies', 'status': tmp['assemblies'], 'rank': 3},
+            {'name': 'raw_data', 'status': tmp['raw_data'], 'rank': 4},
+            {'name': 'annotation', 'status': 'Waiting', 'rank': 5},
+            {'name': 'annotation_complete',
+             'status': tmp['annotation_complete'], 'rank': 6}
+        ]
+        if 'taxonomies' in record:
+            tmp['taxonomies'] = record['taxonomies']
+        es.index('tracking_status_index', tmp, id=organism)
 
 
-def get_biosamples_date(record):
-    for item in record:
-        if item['name'] == 'releaseDate':
-            return item['value']
-
-
-def get_existing_data():
-    existing_data = dict()
-    data = es.search(index='statuses', size=10000)
-    for record in data['hits']['hits']:
-        existing_data[record['_source']['organism']] = record['_id']
-    return existing_data
-
-
-# TODO: refactor
 def check_raw_data_status(record):
-    if len(record[0]['fastq_ftp']) != 0:
+    if 'experiment' in record and len(record['experiment']) > 0:
         return 'Done'
     else:
         return 'Waiting'
 
 
-# TODO: refactor
-def check_mapped_reads_status(record):
-    if len(record[0]['submitted_ftp']) != 0:
-        return 'Done'
-    else:
-        return 'Waiting'
-
-
-# TODO: refactor
 def check_assemblies(record):
-    if len(record) != 0:
+    if 'assemblies' in record and len(record['assemblies']) > 0:
         return 'Done'
     else:
         return 'Waiting'
 
 
 def check_annotation_complete(record):
-    if record == 'Salmo trutta' or record == 'Sciurus vulgaris' \
-            or record == 'Aquila chrysaetos chrysaetos':
+    if record['trackingSystem']['status'] == 'Annotation Complete':
         return 'Done'
     else:
         return 'Waiting'
@@ -85,3 +57,4 @@ def check_annotation_complete(record):
 
 if __name__ == "__main__":
     main()
+
