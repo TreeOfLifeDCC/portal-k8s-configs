@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 import json
 
 class ImportAnnotations():
-    es = Elasticsearch(hosts=["45.86.170.227:31664"])
+    es = Elasticsearch(hosts=["45.86.170.227:80/elasticsearch"])
     data_portal = es.search(index='data_portal_index', size=10000)
     annotationsArray = list()
     organisms = list()
