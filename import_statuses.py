@@ -6,7 +6,7 @@ es = Elasticsearch(['elasticsearch:9200'])
 
 
 def main():
-    data_portal_samples = get_samples('data_portal_index')
+    data_portal_samples = get_samples('data_portal_index', es)
     for organism, record in data_portal_samples.items():
         tmp = dict()
         tmp['organism'] = record['organism']
