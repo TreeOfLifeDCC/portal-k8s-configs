@@ -23,8 +23,7 @@ def main():
     organisms_samples = get_samples('organisms_test', es)
     specimens_samples = get_samples('specimens_test', es)
     for sample in samples['_embedded']['samples']:
-        if sample['accession'] in organisms_samples or sample['accession'] \
-                in specimens_samples:
+        if (sample['accession'] in organisms_samples and sample['accession'] not in new_organisms_samples) or (sample['accession'] in specimens_samples and sample['accession'] not in new_specimens_samples):
             continue
         print(f"{get_date_and_time()}: starting to import "
               f"{sample['accession']}")
@@ -79,7 +78,7 @@ def main():
         if len(record['experiment']) > 0:
             organism = record['organism']['text']
             data_portal_samples[organism].setdefault('experiment', list())
-            data_portal_samples[organism]['experiment'].append(
+            data_portal_samples[organism]['experiment'].extend(
                 record['experiment'])
             if data_portal_samples[organism]['trackingSystem']['status'] == \
                     'Submitted to BioSamples':

@@ -57,14 +57,16 @@ def main():
         percent = int(percent * 100)
         print(f"{get_date_and_time()}: specimens {percent}% ready")
         experiment = get_reads(biosample_id)
-        if len(experiment) > 0 and len(record['experiment']) == 0:
+        if len(experiment) > 0 and \
+                (len(record['experiment']) == 0 or
+                 len(experiment) != len(record['experiment'])):
             record['experiment'] = experiment
             # Mark this sample to be indexed in ES
             new_specimens_samples.append(biosample_id)
             # Add experiments for data_portal_index
             organism = record['organism']['text']
             data_portal_samples[organism].setdefault('experiment', list())
-            data_portal_samples[organism]['assemblies'].extend(experiment)
+            data_portal_samples[organism]['experiment'].extend(experiment)
             # Update tracking status of data_portal_index if required
             if data_portal_samples[organism]['trackingSystem']['status'] == \
                     'Submitted to BioSamples':
@@ -72,7 +74,7 @@ def main():
                     'rank': 1,
                     'status': 'Mapped Reads - Submitted'
                 }
-                new_data_portal_samples.append(organism)
+            new_data_portal_samples.append(organism)
 
     # Number of records to be unpdated
     print(f"{get_date_and_time()}: new data_portal_index records: "

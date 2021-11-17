@@ -8,10 +8,11 @@ es = Elasticsearch(['elasticsearch:9200'])
 
 
 def main():
-    data_portal_samples = get_samples('data_portal_index')
+    data_portal_samples = get_samples('data_portal_index', es)
     ranks = get_ranks()
     for organism, record in data_portal_samples.items():
         if 'taxonomies' not in record:
+            print(organism)
             record['taxonomies'] = dict()
             for rank in ranks:
                 record['taxonomies'][rank] = {
@@ -23,6 +24,9 @@ def main():
                 f'{record["tax_id"]}',
                 shell=True, capture_output=True)
             root = etree.fromstring(results.stdout)
+            if root.find('taxon') is None:
+                es.index('data_portal_index', record, id=organism)
+                continue
             for taxon in root.find('taxon').find('lineage').findall('taxon'):
                 rank = taxon.get('rank')
                 if rank:

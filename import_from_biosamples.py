@@ -3,8 +3,6 @@ from elasticsearch import Elasticsearch
 
 es = Elasticsearch(['elasticsearch:9200'])
 
-organism_terms = ['WHOLE ORGANISM', 'MYCELIUM', 'WHOLE PLANT']
-
 checklist_fields = ['taxId', 'organism part', 'lifestage', 'project name',
                     'collected by', 'collection date',
                     'geographic location (country and/or sea)',
@@ -21,7 +19,7 @@ checklist_fields = ['taxId', 'organism part', 'lifestage', 'project name',
 
 def import_records():
     samples = requests.get(
-        "https://www.ebi.ac.uk/biosamples/samples?size=10000&"
+        "https://www.ebi.ac.uk/biosamples/samples?size=100000&"
         "filter=attr%3Aproject%20name%3ADTOL").json()
     for sample in samples['_embedded']['samples']:
         parse_record(sample['characteristics'], sample['accession'],
@@ -159,3 +157,4 @@ def parse_custom_fields(field_key, field_value):
 
 if __name__ == "__main__":
     import_records()
+
