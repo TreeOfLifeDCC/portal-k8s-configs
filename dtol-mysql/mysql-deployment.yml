@@ -32,7 +32,7 @@ spec:
         env:
           # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
-          value: root@123
+          value: dtolmysqlbuild@123
         ports:
         - containerPort: 3306
           name: mysql
