@@ -1,7 +1,6 @@
 {
-    "size":0,
-	"aggregations": 
-    {
+	"size": 0,
+	"aggregations": {
 		"kingdom": {
 			"nested": {
 				"path": "taxonomies.kingdom"
@@ -11,11 +10,19 @@
 					"terms": {
 						"field": "taxonomies.kingdom.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.kingdom.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subkingdom": {
+		"subkingdom": {
 			"nested": {
 				"path": "taxonomies.subkingdom"
 			},
@@ -24,11 +31,19 @@
 					"terms": {
 						"field": "taxonomies.subkingdom.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subkingdom.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "superphylum": {
+		"superphylum": {
 			"nested": {
 				"path": "taxonomies.superphylum"
 			},
@@ -37,11 +52,19 @@
 					"terms": {
 						"field": "taxonomies.superphylum.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.superphylum.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "phylum": {
+		"phylum": {
 			"nested": {
 				"path": "taxonomies.phylum"
 			},
@@ -50,11 +73,19 @@
 					"terms": {
 						"field": "taxonomies.phylum.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.phylum.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subphylum": {
+		"subphylum": {
 			"nested": {
 				"path": "taxonomies.subphylum"
 			},
@@ -63,11 +94,19 @@
 					"terms": {
 						"field": "taxonomies.subphylum.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subphylum.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "superclass": {
+		"superclass": {
 			"nested": {
 				"path": "taxonomies.superclass"
 			},
@@ -76,11 +115,19 @@
 					"terms": {
 						"field": "taxonomies.superclass.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.superclass.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "class": {
+		"class": {
 			"nested": {
 				"path": "taxonomies.class"
 			},
@@ -89,11 +136,19 @@
 					"terms": {
 						"field": "taxonomies.class.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.class.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subclass": {
+		"subclass": {
 			"nested": {
 				"path": "taxonomies.subclass"
 			},
@@ -102,11 +157,19 @@
 					"terms": {
 						"field": "taxonomies.subclass.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subclass.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "infraclass": {
+		"infraclass": {
 			"nested": {
 				"path": "taxonomies.infraclass"
 			},
@@ -115,11 +178,19 @@
 					"terms": {
 						"field": "taxonomies.infraclass.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.infraclass.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "cohort": {
+		"cohort": {
 			"nested": {
 				"path": "taxonomies.cohort"
 			},
@@ -128,11 +199,19 @@
 					"terms": {
 						"field": "taxonomies.cohort.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.cohort.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subcohort": {
+		"subcohort": {
 			"nested": {
 				"path": "taxonomies.subcohort"
 			},
@@ -141,11 +220,19 @@
 					"terms": {
 						"field": "taxonomies.subcohort.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subcohort.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "superorder": {
+		"superorder": {
 			"nested": {
 				"path": "taxonomies.superorder"
 			},
@@ -154,11 +241,19 @@
 					"terms": {
 						"field": "taxonomies.superorder.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.superorder.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "order": {
+		"order": {
 			"nested": {
 				"path": "taxonomies.order"
 			},
@@ -167,11 +262,19 @@
 					"terms": {
 						"field": "taxonomies.order.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.order.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "parvorder": {
+		"parvorder": {
 			"nested": {
 				"path": "taxonomies.parvorder"
 			},
@@ -180,11 +283,19 @@
 					"terms": {
 						"field": "taxonomies.parvorder.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.parvorder.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "suborder": {
+		"suborder": {
 			"nested": {
 				"path": "taxonomies.suborder"
 			},
@@ -193,11 +304,19 @@
 					"terms": {
 						"field": "taxonomies.suborder.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.suborder.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "infraorder": {
+		"infraorder": {
 			"nested": {
 				"path": "taxonomies.infraorder"
 			},
@@ -206,11 +325,19 @@
 					"terms": {
 						"field": "taxonomies.infraorder.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.infraorder.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "section": {
+		"section": {
 			"nested": {
 				"path": "taxonomies.section"
 			},
@@ -219,11 +346,19 @@
 					"terms": {
 						"field": "taxonomies.section.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.section.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subsection": {
+		"subsection": {
 			"nested": {
 				"path": "taxonomies.subsection"
 			},
@@ -232,11 +367,19 @@
 					"terms": {
 						"field": "taxonomies.subsection.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subsection.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "superfamily": {
+		"superfamily": {
 			"nested": {
 				"path": "taxonomies.superfamily"
 			},
@@ -245,11 +388,19 @@
 					"terms": {
 						"field": "taxonomies.superfamily.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.superfamily.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "family": {
+		"family": {
 			"nested": {
 				"path": "taxonomies.family"
 			},
@@ -258,11 +409,19 @@
 					"terms": {
 						"field": "taxonomies.family.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.family.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subfamily": {
+		"subfamily": {
 			"nested": {
 				"path": "taxonomies.subfamily"
 			},
@@ -271,11 +430,19 @@
 					"terms": {
 						"field": "taxonomies.subfamily.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subfamily.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "tribe": {
+		"tribe": {
 			"nested": {
 				"path": "taxonomies.tribe"
 			},
@@ -284,11 +451,19 @@
 					"terms": {
 						"field": "taxonomies.tribe.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.tribe.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subtribe": {
+		"subtribe": {
 			"nested": {
 				"path": "taxonomies.subtribe"
 			},
@@ -297,11 +472,19 @@
 					"terms": {
 						"field": "taxonomies.subtribe.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subtribe.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "genus": {
+		"genus": {
 			"nested": {
 				"path": "taxonomies.genus"
 			},
@@ -310,11 +493,19 @@
 					"terms": {
 						"field": "taxonomies.genus.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.genus.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "series": {
+		"series": {
 			"nested": {
 				"path": "taxonomies.series"
 			},
@@ -323,11 +514,19 @@
 					"terms": {
 						"field": "taxonomies.series.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.series.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subgenus": {
+		"subgenus": {
 			"nested": {
 				"path": "taxonomies.subgenus"
 			},
@@ -336,11 +535,19 @@
 					"terms": {
 						"field": "taxonomies.subgenus.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subgenus.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "species_group": {
+		"species_group": {
 			"nested": {
 				"path": "taxonomies.species_group"
 			},
@@ -349,11 +556,19 @@
 					"terms": {
 						"field": "taxonomies.species_group.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.species_group.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "species_subgroup": {
+		"species_subgroup": {
 			"nested": {
 				"path": "taxonomies.species_subgroup"
 			},
@@ -362,11 +577,19 @@
 					"terms": {
 						"field": "taxonomies.species_subgroup.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.species_subgroup.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "species": {
+		"species": {
 			"nested": {
 				"path": "taxonomies.species"
 			},
@@ -375,11 +598,19 @@
 					"terms": {
 						"field": "taxonomies.species.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.species.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "subspecies": {
+		"subspecies": {
 			"nested": {
 				"path": "taxonomies.subspecies"
 			},
@@ -388,11 +619,19 @@
 					"terms": {
 						"field": "taxonomies.subspecies.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.subspecies.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "varietas": {
+		"varietas": {
 			"nested": {
 				"path": "taxonomies.varietas"
 			},
@@ -401,11 +640,19 @@
 					"terms": {
 						"field": "taxonomies.varietas.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.varietas.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}
 		},
-        "forma": {
+		"forma": {
 			"nested": {
 				"path": "taxonomies.forma"
 			},
@@ -414,6 +661,14 @@
 					"terms": {
 						"field": "taxonomies.forma.scientificName",
 						"size": 20000
+					},
+					"aggs": {
+						"taxId": {
+							"terms": {
+								"field": "taxonomies.forma.tax_id.keyword",
+								"size": 20000
+							}
+						}
 					}
 				}
 			}

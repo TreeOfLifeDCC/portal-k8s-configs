@@ -4,7 +4,7 @@ metadata:
   name: mysql-pv-claim
   namespace: mysql
 spec:
-  storageClassName: nfs-client
+  storageClassName: default-cinder
   accessModes:
     - ReadWriteOnce
   resources:

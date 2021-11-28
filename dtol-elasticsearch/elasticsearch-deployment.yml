@@ -16,7 +16,7 @@ spec:
       securityContext:
         fsGroup: 2000
       containers:
-        - image: dockerhub.ebi.ac.uk/treeoflifedcc/portal-elastic/elasticsearch-s3:7.13.2
+        - image: dockerhub.ebi.ac.uk/treeoflifedcc/portal-elastic/dtol-elasticsearch-s3-v4:7.13.2
           name: elasticsearch
           volumeMounts:
             - name: data

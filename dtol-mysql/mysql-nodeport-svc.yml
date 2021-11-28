@@ -4,11 +4,10 @@ metadata:
   name: mysql-service
   namespace: mysql
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: mysql
   ports:
     - protocol: TCP
-      port: 3306
-      nodePort: 30036
+      port: 30036
       targetPort: 3306
