@@ -88,7 +88,8 @@ class ScrapeTableSpider(scrapy.Spider):
                 self.caption =self.caption + " " +captionArray[1].strip();
             if("Figure 2" not in captionArray[2]):
                 self.caption =self.caption + " " +captionArray[2].strip();
-            
+                
+            citeURL = res.xpath("//div[@class='article-information']/span[@data-test-id='box-first-published']/a/text()").extract_first();
             prjArticleArray = list()
             prjArticleMap = dict()
             prjArticleMap['id'] = respPrjId
@@ -97,6 +98,7 @@ class ScrapeTableSpider(scrapy.Spider):
             prjArticleMap['url'] = response.url
             prjArticleMap['figureURI'] = self.figureURI
             prjArticleMap['caption'] = self.caption
+            prjArticleMap['citeURL'] = citeURL
             # prjArticleMap['description'] = description
             prjArticleArray.append(prjArticleMap)
             yield prjArticleMap
