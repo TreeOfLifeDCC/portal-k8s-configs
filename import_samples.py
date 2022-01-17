@@ -19,7 +19,7 @@ def main():
         "https://www.ebi.ac.uk/biosamples/samples?size=100000&"
         "filter=attr%3Aproject%20name%3ADTOL").json()
     # get existing data from Elasticsearch
-    data_portal_samples = get_samples('data_portal_index', es)
+    data_portal_samples = get_samples('data_portal', es)
     organisms_samples = get_samples('organisms_test', es)
     specimens_samples = get_samples('specimens_test', es)
     for sample in samples['_embedded']['samples']:
@@ -37,10 +37,7 @@ def main():
                 data_portal_samples[organism]['assemblies'].extend(
                     parse_assemblies(sample['accession']))
                 if len(data_portal_samples[organism]['assemblies']) > 0:
-                    data_portal_samples[organism]['trackingSystem'] = {
-                        'rank': 2,
-                        'status': 'Assemblies - Submitted'
-                    }
+                    data_portal_samples[organism]['currentStatus'] = 'Assemblies - Submitted'
 
             else:
                 abstract_sample = dict()
@@ -55,13 +52,9 @@ def main():
                 abstract_sample['assemblies'] = parse_assemblies(
                     sample['accession'])
                 if len(abstract_sample['assemblies']) > 0:
-                    abstract_sample[
-                        'trackingSystem'] = {
-                        'rank': 2, 'status': 'Assemblies - Submitted'}
+                    abstract_sample['currentStatus'] = 'Assemblies - Submitted'
                 else:
-                    abstract_sample[
-                        'trackingSystem'] = {
-                        'rank': 0, 'status': 'Submitted to BioSamples'}
+                    abstract_sample['currentStatus'] = 'Submitted to BioSamples'
                 data_portal_samples[organism] = abstract_sample
             index = 'organisms_test'
             new_data_portal_samples.append(organism)
@@ -80,12 +73,8 @@ def main():
             data_portal_samples[organism].setdefault('experiment', list())
             data_portal_samples[organism]['experiment'].extend(
                 record['experiment'])
-            if data_portal_samples[organism]['trackingSystem']['status'] == \
-                    'Submitted to BioSamples':
-                data_portal_samples[organism]['trackingSystem'] = {
-                    'rank': 1,
-                    'status': 'Mapped Reads - Submitted'
-                }
+            if data_portal_samples[organism]['currentStatus'] == 'Submitted to BioSamples':
+                data_portal_samples[organism]['currentStatus'] = 'Mapped Reads - Submitted'
             new_data_portal_samples.append(organism)
     print(f"{get_date_and_time()}: new data_portal_index records: "
           f"{len(list(set(new_data_portal_samples)))}")
@@ -94,7 +83,38 @@ def main():
         print(f"{get_date_and_time()}: indexing data_portal_index data")
         for organism, record in data_portal_samples.items():
             if organism in new_data_portal_samples:
-                es.index('data_portal_index', record, id=organism)
+                if 'tax_id' not in record:
+                    record['tax_id'] = record['records'][0]['organism']['ontologyTerm'].split("/")[-1].split("_")[-1]
+                    if 'experiment' in record and len(record['experiment']) > 0:
+                        mapped_reads = 'Done'
+                        raw_data = 'Done'
+                    else:
+                        mapped_reads = 'Waiting'
+                        raw_data = 'Waiting'
+                    if 'assemblies' in record and len(record['assemblies']) > 0:
+                        assemblies = 'Done'
+                    else:
+                        assemblies = 'Waiting'
+                    if record['currentStatus'] == 'Annotation Complete':
+                        annotation_complete = 'Done'
+                    else:
+                        annotation_complete = 'Waiting'
+                    record['trackingSystem'] = [
+                        {'name': 'biosamples', 'status': 'Done', 'rank': 1},
+                        {'name': 'mapped_reads', 'status': mapped_reads, 'rank': 2},
+                        {'name': 'assemblies', 'status': assemblies, 'rank': 3},
+                        {'name': 'raw_data', 'status': raw_data, 'rank': 4},
+                        {'name': 'annotation', 'status': 'Waiting', 'rank': 5},
+                        {'name': 'annotation_complete', 'status': annotation_complete, 'rank': 6}
+                    ]
+                    for status in record['trackingSystem']:
+                        if status['name'] == 'assemblies':
+                            record['assemblies_status'] = status['status']
+                        elif status['name'] == 'annotation':
+                            record['annotation_status'] = status['status']
+                        else:
+                            record[status['name']] = status['status']
+                es.index('data_portal', record, id=organism)
 
     if len(new_organisms_samples) != 0:
         print(f"{get_date_and_time()}: indexing organisms_test data")
