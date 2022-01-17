@@ -5,8 +5,8 @@ from elasticsearch import Elasticsearch
 import json
 
 class ImportAnnotations():
-    es = Elasticsearch(hosts=["45.86.170.227:80/elasticsearch"])
-    data_portal = es.search(index='data_portal_index', size=10000)
+    es = Elasticsearch(hosts=["45.88.81.118:80/elasticsearch"])
+    data_portal = es.search(index='data_portal', size=10000)
     annotationsArray = list()
     organisms = list()
 
@@ -26,7 +26,9 @@ class ImportAnnotations():
                     annotationsDict.append(annot)
             if(len(annotationsDict)> 0):
                 organism['annotation'] = annotationsDict
-                self.es.index('data_portal_index', organism, id=organism_id)
+                # organism['annotation_complete'] = 'Done'
+                # organism['trackingSystem'][5] = {'name': 'annotation_complete', 'status': 'Done', 'rank': 6}
+                self.es.index('data_portal', organism, id=organism_id)
     
 if __name__ == "__main__":
     importAnnotations = ImportAnnotations()
