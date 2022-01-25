@@ -56,33 +56,33 @@ class ScrapeTableSpider(scrapy.Spider):
     
     def check_if_prj_exists(self, response):
         res = response
-        # respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/@href").extract_first()
+        respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/@href").extract_first()
         # respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]//p/text()").extract()
-        respPrjId = response.xpath("//*[contains(text(), 'PRJ')]//text()").extract_first()
-        self.prj = respPrjId
-        # prjArray = respPrjId.split("/")
-        # prjLen = 0
-        # if ((prjArray[len(prjArray) - 1]) != ''):
-        #     self.prj = prjArray[len(prjArray) - 1]
-        # else:
-        #     self.prj = prjArray[len(prjArray) - 2]
-        # if('ena.embl:' in self.prj):
-        #     obj = self.prj.split(":")
-        #     self.prj = obj[1]
-        # if ('PRJ' not in self.prj):
-        #     temp = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/text()").extract_first()
-        #     if('PRJ' not in temp):
-        #         respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/p/text()").extract_first()
-        #         respPrjId = respPrjId.split(" ")
-        #         if("PRJ" in respPrjId[len(respPrjId) -1]):
-        #             self.prj = respPrjId[len(respPrjId) -1]
-        #         else:
-        #             self.prj = respPrjId[len(respPrjId) -2]
-        #             if(':' in self.prj):
-        #                 tmp = self.prj.split(':')
-        #                 self.prj = tmp[0]
-        #     else:
-        #         self.prj = temp
+        # respPrjId = response.xpath("//*[contains(text(), 'PRJ')]//text()").extract_first()
+        # self.prj = respPrjId
+        prjArray = respPrjId.split("/")
+        prjLen = 0
+        if ((prjArray[len(prjArray) - 1]) != ''):
+            self.prj = prjArray[len(prjArray) - 1]
+        else:
+            self.prj = prjArray[len(prjArray) - 2]
+        if('ena.embl:' in self.prj):
+            obj = self.prj.split(":")
+            self.prj = obj[1]
+        if ('PRJ' not in self.prj):
+            temp = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/text()").extract_first()
+            if('PRJ' not in temp):
+                respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/p/text()").extract_first()
+                respPrjId = respPrjId.split(" ")
+                if("PRJ" in respPrjId[len(respPrjId) -1]):
+                    self.prj = respPrjId[len(respPrjId) -1]
+                else:
+                    self.prj = respPrjId[len(respPrjId) -2]
+                    if(':' in self.prj):
+                        tmp = self.prj.split(':')
+                        self.prj = tmp[0]
+            else:
+                self.prj = temp
                     
         if self.prj != None:
             self.figureURI = res.css("div.fig.panel a::attr(href)").extract_first();
