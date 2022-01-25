@@ -24,6 +24,7 @@ class ScrapeTableSpider(scrapy.Spider):
     description = '';
     artTitle = '';
     abstract = '';
+    prj = ''
             
     def get_prj_from_es(self):
         aggregationsResp = requests.post("http://45.88.81.118/elasticsearch/data_portal/_search?pretty",data=self.aggregationsQuery, headers=self.headers).json()
@@ -55,8 +56,35 @@ class ScrapeTableSpider(scrapy.Spider):
     
     def check_if_prj_exists(self, response):
         res = response
+        # respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/@href").extract_first()
+        # respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]//p/text()").extract()
         respPrjId = response.xpath("//*[contains(text(), 'PRJ')]//text()").extract_first()
-        if respPrjId != None:
+        self.prj = respPrjId
+        # prjArray = respPrjId.split("/")
+        # prjLen = 0
+        # if ((prjArray[len(prjArray) - 1]) != ''):
+        #     self.prj = prjArray[len(prjArray) - 1]
+        # else:
+        #     self.prj = prjArray[len(prjArray) - 2]
+        # if('ena.embl:' in self.prj):
+        #     obj = self.prj.split(":")
+        #     self.prj = obj[1]
+        # if ('PRJ' not in self.prj):
+        #     temp = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/a/text()").extract_first()
+        #     if('PRJ' not in temp):
+        #         respPrjId = response.xpath("//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'accession number')]/p/text()").extract_first()
+        #         respPrjId = respPrjId.split(" ")
+        #         if("PRJ" in respPrjId[len(respPrjId) -1]):
+        #             self.prj = respPrjId[len(respPrjId) -1]
+        #         else:
+        #             self.prj = respPrjId[len(respPrjId) -2]
+        #             if(':' in self.prj):
+        #                 tmp = self.prj.split(':')
+        #                 self.prj = tmp[0]
+        #     else:
+        #         self.prj = temp
+                    
+        if self.prj != None:
             self.figureURI = res.css("div.fig.panel a::attr(href)").extract_first();
             self.figureImgURI = res.css("div.fig.panel a img::attr(src)").extract_first()
             self.figureImgAlt = res.css("div.fig.panel a img::attr(alt)").extract_first()
@@ -75,11 +103,6 @@ class ScrapeTableSpider(scrapy.Spider):
                 else:
                     self.abstract = self.abstract + " " +abstract[x].strip()
             
-            # description = res.css("div.fig.panel div.caption p::text").extract()
-            # descriptionLength = len(description)
-            # for x in range(descriptionLength-1):
-            #     self.description = self.description + description[x].strip()
-            
             captionArray = res.css("div.fig.panel div.caption h3::text").extract()
             captionArrayItalic = res.css("div.fig.panel div.caption h3 i::text").extract()
                     
@@ -89,17 +112,16 @@ class ScrapeTableSpider(scrapy.Spider):
             if("Figure 2" not in captionArray[2]):
                 self.caption =self.caption + " " +captionArray[2].strip();
                 
-            citeURL = res.xpath("//div[@class='article-information']/span[@data-test-id='box-first-published']/a/text()").extract_first();
+            citeURL = res.xpath("//div[@class='article-information']/span[@data-test-id='box-latest-published']/a/text()").extract_first();
             prjArticleArray = list()
             prjArticleMap = dict()
-            prjArticleMap['id'] = respPrjId
+            prjArticleMap['id'] = self.prj
             prjArticleMap['title'] = self.artTitle
             prjArticleMap['abstract'] = self.abstract
             prjArticleMap['url'] = response.url
             prjArticleMap['figureURI'] = self.figureURI
             prjArticleMap['caption'] = self.caption
             prjArticleMap['citeURL'] = citeURL
-            # prjArticleMap['description'] = description
             prjArticleArray.append(prjArticleMap)
             yield prjArticleMap
             

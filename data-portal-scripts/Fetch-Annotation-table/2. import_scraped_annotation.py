@@ -26,8 +26,8 @@ class ImportAnnotations():
                     annotationsDict.append(annot)
             if(len(annotationsDict)> 0):
                 organism['annotation'] = annotationsDict
-                # organism['annotation_complete'] = 'Done'
-                # organism['trackingSystem'][5] = {'name': 'annotation_complete', 'status': 'Done', 'rank': 6}
+                organism['annotation_complete'] = 'Done'
+                organism['trackingSystem'][5] = {'name': 'annotation_complete', 'status': 'Done', 'rank': 6}
                 self.es.index('data_portal', organism, id=organism_id)
     
 if __name__ == "__main__":

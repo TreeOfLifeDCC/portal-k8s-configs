@@ -10,7 +10,7 @@ from neo4jConnection import Neo4jConnection
 conn = Neo4jConnection(uri="bolt://45.88.81.61:30087", 
                        user="neo4j",              
                        pwd="AsgNeo4jAdminUser@123")
-es = Elasticsearch(hosts=["45.88.80.71:80/elasticsearch"])
+es = Elasticsearch(hosts=["45.88.81.97:80/elasticsearch"])
 taxaOrderObj = {}
 taxonomiesList = list()
 aggregationsResp = dict()
@@ -34,7 +34,7 @@ with open('taxa-aggs-query.txt', 'r') as file_content:
     aggregationsQuery = json.load(file_content)
     aggregationsQuery = json.dumps(aggregationsQuery)
 
-aggregationsResp = requests.post("http://45.88.80.71/elasticsearch/data_portal/_search?pretty",data=aggregationsQuery, headers=headers).json()
+aggregationsResp = requests.post("http://45.88.81.97/elasticsearch/data_portal/_search?pretty",data=aggregationsQuery, headers=headers).json()
 for rank in taxaRankArray:
     taxRankName = rank
     taxonomies = aggregationsResp['aggregations'][rank]['scientificName']['buckets']

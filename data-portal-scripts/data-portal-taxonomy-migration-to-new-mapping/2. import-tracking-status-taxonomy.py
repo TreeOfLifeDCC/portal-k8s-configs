@@ -4,7 +4,7 @@ from lxml import etree
 from elasticsearch import Elasticsearch
 import json
 
-es = Elasticsearch(hosts=["45.86.170.227:80/elasticsearch"])
+es = Elasticsearch(hosts=["45.88.81.118:80/elasticsearch"])
 data_portal = es.search(index='statuses_index', size=10000)
 names = list()
 for organism in data_portal['hits']['hits']:

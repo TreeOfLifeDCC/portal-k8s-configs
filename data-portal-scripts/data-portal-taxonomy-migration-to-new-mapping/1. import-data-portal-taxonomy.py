@@ -4,8 +4,8 @@ from lxml import etree
 from elasticsearch import Elasticsearch
 import json
 
-es = Elasticsearch(hosts=["45.86.170.227:80/elasticsearch"])
-data_portal = es.search(index='data_portal_index', size=10000)
+es = Elasticsearch(hosts=["45.88.81.118:80/elasticsearch"])
+data_portal = es.search(index='data_portal', size=10000)
 names = list()
 for organism in data_portal['hits']['hits']:
     names.append(organism['_id'])
@@ -46,7 +46,7 @@ for organism in data_portal['hits']['hits']:
                 organism['taxonomies'][rank]['scientificName'] = taxon.get('scientificName')
                 if taxon.get('commonName'):
                     organism['taxonomies'][rank]['commonName'] = taxon.get('commonName')
-        es.index('data_portal_index', organism, id=organism_id)
+        es.index('data_portal', organism, id=organism_id)
     else:
         if(organism['_id'] == "Inachis io"):
             tax_id = mappings[organism['_id']]
@@ -57,4 +57,4 @@ for organism in data_portal['hits']['hits']:
             for rank in ranks:
                 taxa = {'scientificName': 'Other', 'commonName': 'Other'}
                 organism['taxonomies'][rank] = taxa
-            es.index('data_portal_index', organism, id=organism_id)
+            es.index('data_portal', organism, id=organism_id)
