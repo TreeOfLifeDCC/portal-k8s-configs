@@ -7,23 +7,21 @@ from elasticsearch import Elasticsearch
 from neo4j import GraphDatabase
 from neo4jConnection import Neo4jConnection
 
-conn = Neo4jConnection(uri="bolt://45.88.80.141:30087", 
+conn = Neo4jConnection(uri="bolt://localhost:7687", 
                        user="neo4j",              
-                       pwd="DtolNeo4jAdminUser@123")
+                       pwd="neo4j@123")
 es = Elasticsearch(hosts=["45.88.81.118:80/elasticsearch"])
 taxaOrderObj = {}
 taxonomiesList = list()
-taxonomiesListMap = []
 aggregationsResp = dict()
 indexCounter = 2
 taxonomiesOmitted = []
 aggregationsQuery = dict()
-parentRankIndex = 0
 
-taxonomiesList.append({"id":1, "name":"Eukaryota", "rank":"superkingdom", "size":2906, "parentId":0, "commonName": "eucaryotes"})
+taxonomiesList.append({"id":1, "name":"Eukaryota", "rank":"superkingdom", "size":1562, "parentId":0, "commonName": "eucaryotes"})
 taxaOrderObj["Eukaryota"] = 1
+kingdomRanks = ['Metazoa','Viridiplantae','Fungi']
 taxaRankArray = ["kingdom","subkingdom","superphylum","phylum","subphylum","superclass","class","subclass","infraclass","cohort","subcohort","superorder","order","suborder","infraorder","parvorder","section","subsection","superfamily","family","subfamily","tribe","subtribe","genus","series","subgenus","species_group","species_subgroup","species","subspecies","varietas","forma"]
-taxaTempRankArray = ["superkingdom", "kingdom","subkingdom","superphylum","phylum","subphylum","superclass","class","subclass","infraclass","cohort","subcohort","superorder","order","suborder","infraorder","parvorder","section","subsection","superfamily","family","subfamily","tribe","subtribe","genus","series","subgenus","species_group","species_subgroup","species","subspecies","varietas","forma"]
 headers = {'content-type': 'application/json'}
 neo4jQuery = "UNWIND $taxaArray AS taxonomies \
 CREATE (t:Taxonomies) \
@@ -37,7 +35,7 @@ with open('taxa-aggs-query.txt', 'r') as file_content:
     aggregationsQuery = json.dumps(aggregationsQuery)
 
 aggregationsResp = requests.post("http://45.88.81.118/elasticsearch/data_portal/_search?pretty",data=aggregationsQuery, headers=headers).json()
-for index,rank in enumerate(taxaRankArray):
+for rank in taxaRankArray:
     taxRankName = rank
     taxonomies = aggregationsResp['aggregations'][rank]['scientificName']['buckets']
     for element in taxonomies:
@@ -49,41 +47,38 @@ for index,rank in enumerate(taxaRankArray):
                 results = subprocess.run('curl -k https://www.ebi.ac.uk/ena/browser/api/xml/'+taxId, shell=True, capture_output=True)
                 try:
                     root = etree.fromstring(results.stdout)
+                    counter = 0
                     parentTaxon = root.find('taxon')
+                    print(scientificName, taxId)
                     if(parentTaxon):
                         commonName = parentTaxon.get('commonName')
-                        lineageRankIndex = 0
-                        elementRankIndex = taxaTempRankArray.index(taxRankName)
                         for taxon in root.find('taxon').find('lineage').findall('taxon'):
-                            ranx = taxon.get('rank')
-                            if ranx:
-                                tObject = dict()
-                                if ranx == 'species group':
-                                    ranx = 'species_group'
-                                elif ranx == 'species subgroup':
-                                    ranx = 'species_subgroup'
-                                lineageRankIndex = taxaTempRankArray.index(ranx)
-                                if(elementRankIndex > lineageRankIndex):
-                                    rankDifference = elementRankIndex-lineageRankIndex
-                                    tObject["name"] = taxon.get('scientificName')
-                                    tObject["rank"] = ranx
-                                    tObject["rankDifference"]=rankDifference
-                                    if list(filter(lambda x:x["name"]==tObject["name"],taxonomiesList)):
-                                        taxonomiesListMap.append(tObject)
-                        taxaObject["id"] = indexCounter
-                        taxaObject["name"] = scientificName
-                        taxaObject["rank"] = taxRankName
-                        taxaObject["size"] = element['doc_count']
-                        parentobj = min(taxonomiesListMap, key=lambda x:x['rankDifference'])
-                        obj = list(filter(lambda x:x["name"]==parentobj["name"],taxonomiesList))
-                        taxaObject["parentId"] = obj[0]["id"]
-                        if commonName:
-                            taxaObject["commonName"] = commonName
-                        else:
-                            taxaObject["commonName"] = 'Other'
-                        indexCounter = indexCounter + 1
-                        taxonomiesList.append(taxaObject)
-                        taxonomiesListMap = []
+                            if(counter >0):
+                                if len(taxaObject) != 0:
+                                    taxonomiesList.append(taxaObject)
+                                break
+                            else:
+                                ranx = taxon.get('rank')
+                                if ranx:
+                                    if ranx == 'species group':
+                                        ranx = 'species_group'
+                                    elif ranx == 'species subgroup':
+                                        ranx = 'species_subgroup'
+                                    if(taxon.get('scientificName') in taxaOrderObj):
+                                        counter = counter + 1
+                                        taxaOrderObj[scientificName] = indexCounter
+                                        taxaObject["id"] = indexCounter
+                                        taxaObject["name"] = scientificName
+                                        taxaObject["rank"] = taxRankName
+                                        taxaObject["size"] = element['doc_count']
+                                        taxaObject["parentId"] = taxaOrderObj[taxon.get('scientificName')]
+                                        if commonName:
+                                            taxaObject["commonName"] = commonName
+                                        else:
+                                            taxaObject["commonName"] = 'Other'
+                                        indexCounter = indexCounter + 1
+                                    else:
+                                        taxonomiesOmitted.append(scientificName)
                 except etree.XMLSyntaxError:
                     print('**************Skipping invalid XML from URL {}'.format(scientificName + ': https://www.ebi.ac.uk/ena/browser/api/xml/'+taxId))
                     taxonomiesOmitted.append(scientificName)
@@ -91,10 +86,11 @@ for index,rank in enumerate(taxaRankArray):
             else:
                 taxonomiesOmitted.append(scientificName)
 
+
 with open('taxonomies.json', 'w') as f:
     f.write(str(taxonomiesList))
                           
-with open('taxonomies-omited.json', 'w') as f:
+with open('taxonomies-omited.txt', 'w') as f:
     f.write(str(taxonomiesOmitted))
 
 conn.query(neo4jQuery, parameters = {'taxaArray':taxonomiesList})
