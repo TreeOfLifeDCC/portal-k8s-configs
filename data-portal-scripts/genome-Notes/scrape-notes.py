@@ -38,7 +38,8 @@ class ScrapeTableSpider(scrapy.Spider):
             'https://wellcomeopenresearch.org/gateways/treeoflife',
             'https://wellcomeopenresearch.org/gateways/treeoflife?&show=20&page=2',
             'https://wellcomeopenresearch.org/gateways/treeoflife?&show=20&page=3',
-            'https://wellcomeopenresearch.org/gateways/treeoflife?&show=20&page=4'
+            'https://wellcomeopenresearch.org/gateways/treeoflife?&show=20&page=4',
+            'https://wellcomeopenresearch.org/gateways/treeoflife?&show=20&page=5'
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
