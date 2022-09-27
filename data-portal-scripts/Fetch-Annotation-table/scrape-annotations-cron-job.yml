@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: scrape-annotations
+  namespace: cron
+spec:
+  schedule: '0 23 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: scrape-persistent-storage
+            persistentVolumeClaim:
+              claimName: cron-pv-claim
+          containers:
+            - name: scrape-annotations
+              image: ktibrahim/scrape-annotations:latest
+              command: [ "python3", "scrape-annotation.py" ]
+              volumeMounts:
+              - name: scrape-persistent-storage
+                mountPath: /app/shared-assets
+          restartPolicy: OnFailure
