@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: daphne-svc
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: daphne-deployment
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: daphne-deployment
+  labels:
+    app: daphne-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: daphne-deployment
+  # Pod template
+  template:
+    metadata:
+      labels:
+        app: daphne-deployment
+    spec:
+      containers:
+        - name: daphne-deployment
+          image: raheelaqw1024/zip-bulk-downloads:latest
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nfs
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-portal-frontend-downloads
+  annotations:
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+spec:
+  rules:
+    - host: portal.darwintreeoflife.org
+      http:
+        paths:
+          - path: /files
+            backend:
+              serviceName: daphne-svc
+              servicePort: 80
+
