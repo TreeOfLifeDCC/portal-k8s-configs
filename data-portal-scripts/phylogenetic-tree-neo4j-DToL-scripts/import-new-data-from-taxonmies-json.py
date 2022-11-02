@@ -19,12 +19,10 @@ WITH t, taxonomies.parentId as parentId \
 MATCH (parent:Taxonomies {id:parentId}) \
 CREATE (parent)-[:CHILD]->(t)"
 
-neo4jDeleteQuery = "MATCH (n) DETACH DELETE n"
+neo4jDeleteQuery = "MATCH (n:Taxonomies) DETACH DELETE n"
 conn.query(neo4jDeleteQuery)
 
 with open('taxonomies.json', 'r') as f:
-    taxonomiesList = f.read()
-    taxonomiesList = ast.literal_eval(taxonomiesList)
-
+    taxonomiesList = json.load(f)
 
 conn.query(neo4jQuery, parameters = {'taxaArray':taxonomiesList})
