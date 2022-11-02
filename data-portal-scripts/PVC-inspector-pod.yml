@@ -1,0 +1,20 @@
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-inspector
+  namespace: cron
+spec:
+  containers:
+  - image: busybox
+    name: pvc-inspector
+    command: ["tail"]
+    args: ["-f", "/dev/null"]
+    volumeMounts:
+    - name: import-persistent-storage
+      mountPath: /app/shared-assets
+  volumes:
+  - name: import-persistent-storage
+    persistentVolumeClaim:
+      claimName: cron-pv-claim
+EOF
