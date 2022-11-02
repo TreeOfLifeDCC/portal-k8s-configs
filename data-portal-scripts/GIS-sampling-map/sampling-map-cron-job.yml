@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sampling-map
+  namespace: cron
+spec:
+  schedule: '15 23 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: sampling-map
+              image: ktibrahim/sampling-map:latest
+              command: [ "python3", "sampling-map.py" ]
+          restartPolicy: OnFailure
