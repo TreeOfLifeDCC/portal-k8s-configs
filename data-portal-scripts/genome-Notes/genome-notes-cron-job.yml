@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: genome-notes
+  namespace: cron
+spec:
+  schedule: '40 23 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: genome-notes
+              image: ktibrahim/genome-notes:current
+              command: [ "python3", "notes.py" ]
+          restartPolicy: OnFailure
