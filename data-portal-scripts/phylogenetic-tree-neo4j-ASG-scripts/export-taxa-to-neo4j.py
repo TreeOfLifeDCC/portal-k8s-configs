@@ -100,9 +100,3 @@ taxonomiesListJsonObj = json.loads(taxonomiesListJsonString)
 
 conn.query(neo4jDeleteQuery)
 conn.query(neo4jQuery, parameters = {'taxaArray':taxonomiesListJsonObj})
-
-# with open('taxonomies.json', 'w') as f:
-#     f.write(taxonomiesListJsonString)
-                          
-# with open('taxonomies-omited.json', 'w') as f:
-#     f.write(str(taxonomiesOmitted))

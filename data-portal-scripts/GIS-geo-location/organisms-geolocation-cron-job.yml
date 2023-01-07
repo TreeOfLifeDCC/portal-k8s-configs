@@ -4,7 +4,7 @@ metadata:
   name: organisms-geolocation
   namespace: cron
 spec:
-  schedule: '5 23 * * *'
+  schedule: '20 23 * * *'
   jobTemplate:
     spec:
       template:

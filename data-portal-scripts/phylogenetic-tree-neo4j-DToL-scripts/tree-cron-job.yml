@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: dtol-tree
+  namespace: cron
+spec:
+  schedule: '30 23 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: dtol-tree
+              image: ktibrahim/dtol-tree:current
+              command: [ "python3", "export-taxa-to-neo4j.py" ]
+          restartPolicy: OnFailure
