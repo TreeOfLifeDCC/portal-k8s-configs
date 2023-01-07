@@ -1,9 +1,9 @@
 import requests
 import subprocess
 import json
-import ast
 from lxml import etree
 from elasticsearch import Elasticsearch
+from elasticsearch import RequestsHttpConnection
 from neo4j import GraphDatabase
 from neo4jConnection import Neo4jConnection
 from datetime import datetime
@@ -11,7 +11,8 @@ from datetime import datetime
 conn = Neo4jConnection(uri="bolt://45.88.80.141:30087", 
                        user="neo4j",              
                        pwd="DtolNeo4jAdminUser@123")
-es = Elasticsearch(hosts=["45.88.81.118:80/elasticsearch"])
+es = Elasticsearch('http://elasticcron:9200', connection_class=RequestsHttpConnection,
+                   use_ssl=False, verify_certs=False, timeout=10000)
 taxaOrderObj = {}
 taxonomiesList = list()
 taxonomiesListMap = []
@@ -38,7 +39,7 @@ with open('taxa-aggs-query.txt', 'r') as file_content:
     aggregationsQuery = json.load(file_content)
     aggregationsQuery = json.dumps(aggregationsQuery)
 
-aggregationsResp = requests.post("http://45.88.81.118/elasticsearch/data_portal/_search?pretty",data=aggregationsQuery, headers=headers).json()
+aggregationsResp = requests.post("http://elasticcron:9200/data_portal/_search?pretty",data=aggregationsQuery, headers=headers).json()
 for index,rank in enumerate(taxaRankArray):
     taxRankName = rank
     taxonomies = aggregationsResp['aggregations'][rank]['scientificName']['buckets']
@@ -98,9 +99,4 @@ taxonomiesListJsonObj = json.loads(taxonomiesListJsonString)
 
 conn.query(neo4jDeleteQuery)
 conn.query(neo4jQuery, parameters = {'taxaArray':taxonomiesListJsonObj})
-
-with open('taxonomies.json', 'w') as f:
-    f.write(taxonomiesListJsonString)
-                          
-with open('taxonomies-omited.json', 'w') as f:
-    f.write(str(taxonomiesOmitted))
+print('Tree updated')
