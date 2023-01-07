@@ -4,7 +4,7 @@ metadata:
   name: sampling-map
   namespace: cron
 spec:
-  schedule: '15 23 * * *'
+  schedule: '10 23 * * *'
   jobTemplate:
     spec:
       template:
