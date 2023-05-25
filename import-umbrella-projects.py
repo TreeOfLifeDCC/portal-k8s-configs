@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 import requests
 from common_functions import get_common_name, get_reads, check_field_existence, get_etag, parse_experiments, \
     parse_custom_fields
-from constants import  projects
+from constants import projects
 
 es = Elasticsearch(
     ['https://prj-ext-prod-planet-bio-dr.es.europe-west2.gcp.elastic-cloud.com'],
