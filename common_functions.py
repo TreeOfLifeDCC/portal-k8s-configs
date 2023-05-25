@@ -3,7 +3,6 @@ from datetime import datetime
 from constants import CHECKLIST_FIELDS
 
 
-
 def check_field_existence(sample, field_name, units=False, ontology=False):
     if units:
         if field_name in sample:
@@ -159,35 +158,35 @@ def get_etag(biosamples_id):
 def parse_experiments(sample_id):
     experiments = list()
     experiments_data = requests.get(f'https://www.ebi.ac.uk/ena/portal/'
-                                    'api/filereport?result=read_run'
-                                    '&accession={sample_id}'
-                                    '&offset=0&limit=1000&format=json'
-                                    '&fields=study_accession,'
-                                    'secondary_study_accession,'
-                                    'sample_accession,'
-                                    'secondary_sample_accession,'
-                                    'experiment_accession,run_accession,'
-                                    'submission_accession,tax_id,'
-                                    'scientific_name,instrument_platform,'
-                                    'instrument_model,library_name,'
-                                    'nominal_length,library_layout,'
-                                    'library_strategy,library_source,'
-                                    'library_selection,read_count,'
-                                    'base_count,center_name,first_public,'
-                                    'last_updated,experiment_title,'
-                                    'study_title,study_alias,'
-                                    'experiment_alias,run_alias,'
-                                    'fastq_bytes,fastq_md5,fastq_ftp,'
-                                    'fastq_aspera,fastq_galaxy,'
-                                    'submitted_bytes,submitted_md5,'
-                                    'submitted_ftp,submitted_aspera,'
-                                    'submitted_galaxy,submitted_format,'
-                                    'sra_bytes,sra_md5,sra_ftp,sra_aspera,'
-                                    'sra_galaxy,cram_index_ftp,'
-                                    'cram_index_aspera,cram_index_galaxy,'
-                                    'sample_alias,broker_name,'
-                                    'sample_title,nominal_sdev,'
-                                    'first_created')
+                                    f'api/filereport?result=read_run'
+                                    f'&accession={sample_id}'
+                                    f'&offset=0&limit=1000&format=json'
+                                    f'&fields=study_accession,'
+                                    f'secondary_study_accession,'
+                                    f'sample_accession,'
+                                    f'secondary_sample_accession,'
+                                    f'experiment_accession,run_accession,'
+                                    f'submission_accession,tax_id,'
+                                    f'scientific_name,instrument_platform,'
+                                    f'instrument_model,library_name,'
+                                    f'nominal_length,library_layout,'
+                                    f'library_strategy,library_source,'
+                                    f'library_selection,read_count,'
+                                    f'base_count,center_name,first_public,'
+                                    f'last_updated,experiment_title,'
+                                    f'study_title,study_alias,'
+                                    f'experiment_alias,run_alias,'
+                                    f'fastq_bytes,fastq_md5,fastq_ftp,'
+                                    f'fastq_aspera,fastq_galaxy,'
+                                    f'submitted_bytes,submitted_md5,'
+                                    f'submitted_ftp,submitted_aspera,'
+                                    f'submitted_galaxy,submitted_format,'
+                                    f'sra_bytes,sra_md5,sra_ftp,sra_aspera,'
+                                    f'sra_galaxy,cram_index_ftp,'
+                                    f'cram_index_aspera,cram_index_galaxy,'
+                                    f'sample_alias,broker_name,'
+                                    f'sample_title,nominal_sdev,'
+                                    f'first_created')
     if experiments_data.status_code != 200:
         return experiments
     experiments_data = experiments_data.json()
