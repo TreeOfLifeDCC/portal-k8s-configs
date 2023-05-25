@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+from constants import CHECKLIST_FIELDS
 
 
 
@@ -107,4 +108,115 @@ def get_reads(sample_id):
         return list()
     else:
         return experiments_data.json()
+
+
+def check_field_existence(sample, field_name, units=False, ontology=False):
+    if units:
+        if field_name in sample and 'unit' in sample[field_name][0]:
+            return {
+                'text': sample[field_name][0]['text'],
+                'unit': sample[field_name][0]['unit']
+            }
+        elif field_name in sample and 'unit' not in sample[field_name][0]:
+            return {
+                'text': sample[field_name][0]['text'],
+                # 'unit': sample[field_name][0]['unit']
+            }
+        else:
+            return {
+                'text': None,
+                'unit': None
+            }
+    elif ontology:
+        if field_name in sample and 'ontologyTerms' in sample[field_name][0]:
+            return {
+                'text': sample[field_name][0]['text'],
+                'ontologyTerm': sample[field_name][0]['ontologyTerms'][0]
+            }
+        elif field_name in sample and 'ontologyTerms' not in sample[field_name][0]:
+            return {
+                'text': sample[field_name][0]['text'],
+                # 'ontologyTerm': sample[field_name][0]['ontologyTerms'][0]
+            }
+        else:
+            return {
+                'text': None,
+                'unit': None
+            }
+    else:
+        if field_name in sample:
+            return sample[field_name][0]['text']
+        else:
+            return None
+
+
+def get_etag(biosamples_id):
+    sample = requests.get(
+        f"https://www.ebi.ac.uk/biosamples/samples/{biosamples_id}")
+    return sample.headers['ETag']
+
+
+def parse_experiments(sample_id):
+    experiments = list()
+    experiments_data = requests.get(f'https://www.ebi.ac.uk/ena/portal/'
+                                    'api/filereport?result=read_run'
+                                    '&accession={sample_id}'
+                                    '&offset=0&limit=1000&format=json'
+                                    '&fields=study_accession,'
+                                    'secondary_study_accession,'
+                                    'sample_accession,'
+                                    'secondary_sample_accession,'
+                                    'experiment_accession,run_accession,'
+                                    'submission_accession,tax_id,'
+                                    'scientific_name,instrument_platform,'
+                                    'instrument_model,library_name,'
+                                    'nominal_length,library_layout,'
+                                    'library_strategy,library_source,'
+                                    'library_selection,read_count,'
+                                    'base_count,center_name,first_public,'
+                                    'last_updated,experiment_title,'
+                                    'study_title,study_alias,'
+                                    'experiment_alias,run_alias,'
+                                    'fastq_bytes,fastq_md5,fastq_ftp,'
+                                    'fastq_aspera,fastq_galaxy,'
+                                    'submitted_bytes,submitted_md5,'
+                                    'submitted_ftp,submitted_aspera,'
+                                    'submitted_galaxy,submitted_format,'
+                                    'sra_bytes,sra_md5,sra_ftp,sra_aspera,'
+                                    'sra_galaxy,cram_index_ftp,'
+                                    'cram_index_aspera,cram_index_galaxy,'
+                                    'sample_alias,broker_name,'
+                                    'sample_title,nominal_sdev,'
+                                    'first_created')
+    if experiments_data.status_code != 200:
+        return experiments
+    experiments_data = experiments_data.json()
+    for experiment in experiments_data:
+        tmp = dict()
+        tmp['experiment_accession'] = experiment['experiment_accession']
+        tmp['fastq_ftp'] = [file for file in experiment['fastq_ftp'].split(";")]
+        tmp['run_accession'] = experiment['run_accession']
+        tmp['scientific_name'] = experiment['scientific_name']
+        tmp['sra_ftp'] = [file for file in experiment['sra_ftp'].split(";")]
+        tmp['study_accession'] = experiment['study_accession']
+        tmp['submitted_ftp'] = [
+            file for file in experiment['submitted_ftp'].split(";")]
+        tmp['tax_id'] = experiment['tax_id']
+        tmp['instrument_platform'] = experiment['instrument_platform']
+        tmp['instrument_model'] = experiment['instrument_model']
+        tmp['library_layout'] = experiment['library_layout']
+        tmp['library_strategy'] = experiment['library_strategy']
+        tmp['library_source'] = experiment['library_source']
+        tmp['library_selection'] = experiment['library_selection']
+        tmp['first_public'] = experiment['first_public']
+        experiments.append(tmp)
+    return experiments
+
+
+def parse_custom_fields(field_key, field_value):
+    if field_key not in CHECKLIST_FIELDS:
+        return {
+            'name': field_key,
+            'value': field_value[0]['text']
+        }
 

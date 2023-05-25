@@ -1,7 +1,8 @@
 from elasticsearch import Elasticsearch
 import requests
-from common_functions import get_common_name, get_reads
-from constants import CHECKLIST_FIELDS, projects
+from common_functions import get_common_name, get_reads, check_field_existence, get_etag, parse_experiments, \
+    parse_custom_fields
+from constants import  projects
 
 es = Elasticsearch(
     ['https://prj-ext-prod-planet-bio-dr.es.europe-west2.gcp.elastic-cloud.com'],
@@ -59,8 +60,9 @@ def get_ena_data(project_id):
     print(f"{project_id}: get ena data for project id")
     return requests.get(
         'https://www.ebi.ac.uk/ena/portal/api/filereport?result=read_run&accession=' + project_id + '&limit=1000'
-                                                                                                    '&format=json'                                                                                                   '&fields'
-                                                                                                    '=study_accession,secondary_study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,submission_accession,tax_id,scientific_name,instrument_platform,instrument_model,library_name,nominal_length,library_layout,library_strategy,library_source,library_selection,read_count,base_count,center_name,first_public,last_updated,experiment_title,study_title,study_alias,experiment_alias,run_alias,fastq_bytes,fastq_md5,fastq_ftp,fastq_aspera,fastq_galaxy,submitted_bytes,submitted_md5,submitted_ftp,submitted_aspera,submitted_galaxy,submitted_format,sra_bytes,sra_md5,sra_ftp,sra_aspera,sra_galaxy,sample_alias,broker_name,sample_title,nominal_sdev,first_created').json()
+                                                                                                    '&format=json'
+                                                                                                    '&fields'
+                                                                                                    '=sample_accession').json()
 
 
 def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=None, project_name=None):
@@ -102,13 +104,13 @@ def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=No
                     sample_to_submit['collectedBy'] = check_field_existence(sample['characteristics'], 'collected by')
                     sample_to_submit['collectionDate'] = check_field_existence(sample, 'collection date')
                     sample_to_submit['geographicLocationCountryAndOrSea'] = check_field_existence(
-                        sample['characteristics'], 'geographic location (country and/or sea)')
+                        sample['characteristics'], 'geographic location (country and/or sea)', units=True)
                     sample_to_submit['geographicLocationLatitude'] = check_field_existence(
-                        sample['characteristics'], 'geographic location (latitude)')
+                        sample['characteristics'], 'geographic location (latitude)', units=True)
                     sample_to_submit['geographicLocationLongitude'] = check_field_existence(
-                        sample['characteristics'], 'geographic location (longitude)')
+                        sample['characteristics'], 'geographic location (longitude)', units=True)
                     sample_to_submit['geographicLocationRegionAndLocality'] = check_field_existence(
-                        sample['characteristics'], 'geographic location (region and locality)')
+                        sample['characteristics'], 'geographic location (region and locality)', units=True)
                     sample_to_submit['identifiedBy'] = check_field_existence(sample['characteristics'], 'identified by')
                     sample_to_submit['habitat'] = check_field_existence(sample['characteristics'], 'habitat')
                     sample_to_submit['identifierAffiliation'] = check_field_existence(
@@ -270,9 +272,9 @@ def parse_record(sample, accession, taxon_id, index, organisms_samples):
     record['geographicLocationCountryAndOrSea'] = check_field_existence(
         sample, 'geographic location (country and/or sea)')
     record['geographicLocationLatitude'] = check_field_existence(
-        sample, 'geographic location (latitude)')
+        sample, 'geographic location (latitude)', units=True)
     record['geographicLocationLongitude'] = check_field_existence(
-        sample, 'geographic location (longitude)')
+        sample, 'geographic location (longitude)', units=True)
     record['geographicLocationRegionAndLocality'] = check_field_existence(
         sample, 'geographic location (region and locality)')
     record['identifiedBy'] = check_field_existence(sample, 'identified by')
@@ -323,13 +325,6 @@ def parse_record(sample, accession, taxon_id, index, organisms_samples):
     # Write data to ES
     if index == 'specimens_test_index':
         record['experiment'] = get_reads(record['accession'])
-        record['geographicLocationLatitude'] = check_field_existence(
-            sample, 'geographic location (latitude)')
-        record['geographicLocationLongitude'] = check_field_existence(
-            sample, 'geographic location (longitude)')
-        print(record['accession'])
-        print(record['geographicLocationLatitude'])
-        print(record['geographicLocationLongitude'])
         es.index(index=index, document=record, id=record['accession'])
         # Update related organism index
         if record['sampleDerivedFrom'] in organisms_samples:
@@ -355,117 +350,6 @@ def parse_record(sample, accession, taxon_id, index, organisms_samples):
         else:
             record['specimens'] = list()
         organisms_samples[accession] = record
-
-
-def check_field_existence(sample, field_name, units=False, ontology=False):
-    if units:
-        if field_name in sample and 'unit' in sample[field_name][0]:
-            return {
-                'text': sample[field_name][0]['text'],
-                'unit': sample[field_name][0]['unit']
-            }
-        elif field_name in sample and 'unit' not in sample[field_name][0]:
-            return {
-                'text': sample[field_name][0]['text'],
-                # 'unit': sample[field_name][0]['unit']
-            }
-        else:
-            return {
-                'text': None,
-                'unit': None
-            }
-    elif ontology:
-        if field_name in sample and 'ontologyTerms' in sample[field_name][0]:
-            return {
-                'text': sample[field_name][0]['text'],
-                'ontologyTerm': sample[field_name][0]['ontologyTerms'][0]
-            }
-        elif field_name in sample and 'ontologyTerms' not in sample[field_name][0]:
-            return {
-                'text': sample[field_name][0]['text'],
-                # 'ontologyTerm': sample[field_name][0]['ontologyTerms'][0]
-            }
-        else:
-            return {
-                'text': None,
-                'unit': None
-            }
-    else:
-        if field_name in sample:
-            return sample[field_name][0]['text']
-        else:
-            return None
-
-
-def parse_custom_fields(field_key, field_value):
-    if field_key not in CHECKLIST_FIELDS:
-        return {
-            'name': field_key,
-            'value': field_value[0]['text']
-        }
-
-
-def get_etag(biosamples_id):
-    sample = requests.get(
-        f"https://www.ebi.ac.uk/biosamples/samples/{biosamples_id}")
-    return sample.headers['ETag']
-
-
-def parse_experiments(sample_id):
-    experiments = list()
-    experiments_data = requests.get(f'https://www.ebi.ac.uk/ena/portal/'
-                                    'api/filereport?result=read_run'
-                                    '&accession={sample_id}'
-                                    '&offset=0&limit=1000&format=json'
-                                    '&fields=study_accession,'
-                                    'secondary_study_accession,'
-                                    'sample_accession,'
-                                    'secondary_sample_accession,'
-                                    'experiment_accession,run_accession,'
-                                    'submission_accession,tax_id,'
-                                    'scientific_name,instrument_platform,'
-                                    'instrument_model,library_name,'
-                                    'nominal_length,library_layout,'
-                                    'library_strategy,library_source,'
-                                    'library_selection,read_count,'
-                                    'base_count,center_name,first_public,'
-                                    'last_updated,experiment_title,'
-                                    'study_title,study_alias,'
-                                    'experiment_alias,run_alias,'
-                                    'fastq_bytes,fastq_md5,fastq_ftp,'
-                                    'fastq_aspera,fastq_galaxy,'
-                                    'submitted_bytes,submitted_md5,'
-                                    'submitted_ftp,submitted_aspera,'
-                                    'submitted_galaxy,submitted_format,'
-                                    'sra_bytes,sra_md5,sra_ftp,sra_aspera,'
-                                    'sra_galaxy,cram_index_ftp,'
-                                    'cram_index_aspera,cram_index_galaxy,'
-                                    'sample_alias,broker_name,'
-                                    'sample_title,nominal_sdev,'
-                                    'first_created')
-    if experiments_data.status_code != 200:
-        return experiments
-    experiments_data = experiments_data.json()
-    for experiment in experiments_data:
-        tmp = dict()
-        tmp['experiment_accession'] = experiment['experiment_accession']
-        tmp['fastq_ftp'] = [file for file in experiment['fastq_ftp'].split(";")]
-        tmp['run_accession'] = experiment['run_accession']
-        tmp['scientific_name'] = experiment['scientific_name']
-        tmp['sra_ftp'] = [file for file in experiment['sra_ftp'].split(";")]
-        tmp['study_accession'] = experiment['study_accession']
-        tmp['submitted_ftp'] = [
-            file for file in experiment['submitted_ftp'].split(";")]
-        tmp['tax_id'] = experiment['tax_id']
-        tmp['instrument_platform'] = experiment['instrument_platform']
-        tmp['instrument_model'] = experiment['instrument_model']
-        tmp['library_layout'] = experiment['library_layout']
-        tmp['library_strategy'] = experiment['library_strategy']
-        tmp['library_source'] = experiment['library_source']
-        tmp['library_selection'] = experiment['library_selection']
-        tmp['first_public'] = experiment['first_public']
-        experiments.append(tmp)
-    return experiments
 
 
 if __name__ == "__main__":
