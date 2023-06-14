@@ -39,7 +39,7 @@ def get_common_name(latin_name):
     if common_name_response.content.decode('utf-8') == "No results.":
         return None
     common_name_response = common_name_response.json()
-    if 'commonName' in common_name_response[0]:
+    if common_name_response and len(common_name_response) > 0 and 'commonName' in common_name_response[0]:
         return common_name_response[0]['commonName']
     else:
         return None

@@ -3,6 +3,7 @@ import requests
 from common_functions import get_common_name, get_reads, check_field_existence, get_etag, parse_experiments, \
     parse_custom_fields
 from constants import projects
+import multiprocessing
 
 es = Elasticsearch(
     ['https://prj-ext-prod-planet-bio-dr.es.europe-west2.gcp.elastic-cloud.com'],
@@ -22,9 +23,17 @@ def main():
             print(len(biosamples))
             data_portal_samples = dict()
             organisms_samples = dict()
+            # for _, sample in biosamples.items():
+            #     parse_biosamples_data(sample, data_portal_samples, organisms_samples, project[1])
+
+            cpus = multiprocessing.cpu_count()
+            pool = multiprocessing.Pool(cpus if cpus < 8 else 10)
             for _, sample in biosamples.items():
                 parse_biosamples_data(sample, data_portal_samples, organisms_samples, project[1])
-
+                pool.apply_async(parse_biosamples_data,
+                                 args=(sample, data_portal_samples, organisms_samples, project[1]))
+            pool.close()
+            pool.join()
 
 def get_parent_and_child_projects(study_accession, parent_study_accession):
     result = requests.post('https://www.ebi.ac.uk/ena/portal/api/search',
@@ -180,9 +189,9 @@ def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=No
             parse_record(sample['characteristics'], sample['accession'],
                          sample['taxId'], index, organisms_samples)
             for organism, record in data_portal_samples.items():
-                es.index(index='data_portal_index', document=record, id=organism)
+                es.index('data_portal_index', record, id=organism)
             for biosample_id, record in organisms_samples.items():
-                es.index(index='organisms_test_index', document=record, id=biosample_id)
+                es.index('organisms_test_index', record, id=biosample_id)
 
 
 def parse_assemblies(sample_id):
@@ -309,6 +318,7 @@ def parse_record(sample, accession, taxon_id, index, organisms_samples):
         sample, 'culture or strain id')
     if index == 'organisms_test_index':
         record['assemblies'] = parse_assemblies(accession)
+        record['assemblies'] = parse_assemblies(accession)
         if len(record['assemblies']) > 0:
             record['trackingSystem'] = 'Assemblies - Submitted'
         else:
@@ -325,7 +335,7 @@ def parse_record(sample, accession, taxon_id, index, organisms_samples):
     # Write data to ES
     if index == 'specimens_test_index':
         record['experiment'] = get_reads(record['accession'])
-        es.index(index=index, document=record, id=record['accession'])
+        es.index(index, record, id=record['accession'])
         # Update related organism index
         if record['sampleDerivedFrom'] in organisms_samples:
             organisms_samples[record['sampleDerivedFrom']]['specimens'].append({
