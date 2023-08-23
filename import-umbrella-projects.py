@@ -4,10 +4,16 @@ from common_functions import get_common_name, get_reads, check_field_existence, 
     parse_custom_fields, get_samples
 from constants import projects
 import multiprocessing
+import os
+
+ES_HOST = os.getenv('ES_CONNECTION_URL')
+ES_USERNAME = os.getenv('ES_USERNAME')
+ES_PASSWORD = os.getenv('ES_PASSWORD')
+
 
 es = Elasticsearch(
-    ['https://prj-ext-prod-planet-bio-dr.es.europe-west2.gcp.elastic-cloud.com'],
-    http_auth=('elastic', 'LYbx3h2EIz8COQIHEZ3oQxHo'),
+    [ES_HOST],
+    http_auth=(ES_USERNAME, ES_PASSWORD),
     scheme="https", port=443, )
 
 new_specimens_samples = dict()
