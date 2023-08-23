@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch
 import requests
 from common_functions import get_common_name, get_reads, check_field_existence, get_etag, parse_experiments, \
-    parse_custom_fields
+    parse_custom_fields, get_samples
 from constants import projects
 import multiprocessing
 
@@ -11,21 +11,21 @@ es = Elasticsearch(
     scheme="https", port=443, )
 
 new_specimens_samples = dict()
+new_organism_samples = dict()
 projectIds = []
 
 
 def main():
     for project in projects:
-        if project[0] not in ['PRJEB40665', 'PRJEB43510', 'PRJEB43743']:
+        if project[0]:
+
             source_primary_accessions = get_parent_and_child_projects(project[0], project[0])
             print(f"{len(source_primary_accessions)}: child Projects count")
             biosamples = parse_biosamples(source_primary_accessions)
-            print(len(biosamples))
-            data_portal_samples = dict()
+            print(f"{len(biosamples)}:  biosamples count")
+            data_portal_samples = get_samples('data_portal_index', es)
+            print(f"{len(data_portal_samples)}: Already stored data count")
             organisms_samples = dict()
-            # for _, sample in biosamples.items():
-            #     parse_biosamples_data(sample, data_portal_samples, organisms_samples, project[1])
-
             cpus = multiprocessing.cpu_count()
             pool = multiprocessing.Pool(cpus if cpus < 8 else 10)
             for _, sample in biosamples.items():
@@ -34,6 +34,14 @@ def main():
                                  args=(sample, data_portal_samples, organisms_samples, project[1]))
             pool.close()
             pool.join()
+
+
+# def getDtolSample():
+#     samples = requests.get(
+#         "https://www.ebi.ac.uk/biosamples/samples?size=100000&"
+#         "filter=attr%3Aproject%20name%3ADTOL").json()
+#     return samples
+
 
 def get_parent_and_child_projects(study_accession, parent_study_accession):
     result = requests.post('https://www.ebi.ac.uk/ena/portal/api/search',
@@ -55,23 +63,22 @@ def parse_biosamples(primary_accessions):
     biosamples = dict()
     for acc in primary_accessions:
         data = get_ena_data(acc)
-        print(f"{len(data)}: Ena Data Length ")
+        # if 'sample_accession' in data:
+        #     print(f"{len(data)}: Ena Data Length ")
         for ena_data_record in data:
-            sample_id = ena_data_record['sample_accession']
-            if sample_id is not None and sample_id != "":
-                biosamples[sample_id] = requests.get(
-                    f'https://www.ebi.ac.uk/biosamples/samples/{sample_id}'
-                ).json()
+            if 'sample_accession' in ena_data_record:
+                sample_id = ena_data_record['sample_accession']
+                if sample_id is not None and sample_id != "":
+                    biosamples[sample_id] = requests.get(
+                        f'https://www.ebi.ac.uk/biosamples/samples/{sample_id}'
+                    ).json()
     return biosamples
 
 
 def get_ena_data(project_id):
     print(f"{project_id}: get ena data for project id")
     return requests.get(
-        'https://www.ebi.ac.uk/ena/portal/api/filereport?result=read_run&accession=' + project_id + '&limit=1000'
-                                                                                                    '&format=json'
-                                                                                                    '&fields'
-                                                                                                    '=sample_accession').json()
+        'https://www.ebi.ac.uk/ena/portal/api/search?fields=sample_accession&includeAccessions=' + project_id + '&result=read_run&format=json').json()
 
 
 def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=None, project_name=None):
@@ -88,7 +95,14 @@ def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=No
                     data_portal_samples[organism]['records'].append(
                         parse_record_data_portal(sample['characteristics'],
                                                  sample['accession']))
-                    data_portal_samples[organism]['project_name'] = project_name
+
+                    if data_portal_samples[organism]['project_name']:
+                        if project_name not in data_portal_samples[organism]['project_name']:
+                            data_portal_samples[organism]['project_name'].append(project_name)
+                    else:
+                        data_portal_samples[organism]['project_name'] = project_name
+
+                    new_organism_samples[organism] = data_portal_samples[organism]
                 else:
                     sample_to_submit = dict()
                     # Parse mandatory attributes
@@ -188,7 +202,13 @@ def parse_biosamples_data(sample, data_portal_samples=None, organisms_samples=No
                 index = 'specimens_test_index'
             parse_record(sample['characteristics'], sample['accession'],
                          sample['taxId'], index, organisms_samples)
+            print(len(new_organism_samples))
+            for organism, record in new_organism_samples.items():
+                print(record['project_name'])
+                es.index('data_portal_index', record, id=organism)
+
             for organism, record in data_portal_samples.items():
+                print(record['project_name'])
                 es.index('data_portal_index', record, id=organism)
             for biosample_id, record in organisms_samples.items():
                 es.index('organisms_test_index', record, id=biosample_id)
