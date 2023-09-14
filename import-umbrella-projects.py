@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch, AsyncElasticsearch
 import requests
-
+import os
 from datetime import datetime
 
 import aiohttp
@@ -10,12 +10,9 @@ import json
 from common_functions import get_common_name, get_reads, check_field_existence, get_etag, parse_experiments, \
     parse_custom_fields, get_samples
 
-ES_HOST = 'https://prj-ext-prod-planet-bio-dr.es.europe-west2.gcp.elastic-cloud.com'
-# os.getenv('ES_CONNECTION_URL')
-ES_USERNAME = 'elastic'
-# os.getenv('ES_USERNAME')
-ES_PASSWORD = 'VWpqscMp3qPp6Yx8UnAjDdpJ'
-# os.getenv('ES_PASSWORD')
+ES_HOST = os.getenv('ES_CONNECTION_URL')
+ES_USERNAME = os.getenv('ES_USERNAME')
+ES_PASSWORD = os.getenv('ES_PASSWORD')
 
 
 es = Elasticsearch(
