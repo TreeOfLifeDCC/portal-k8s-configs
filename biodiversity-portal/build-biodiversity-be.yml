@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biodiversity-be-deployment
+  labels:
+    app: biodiversity-be-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: biodiversity-be-deployment
+  # Pod template
+  template:
+    metadata:
+      labels:
+        app: biodiversity-be-deployment
+    spec:
+      containers:
+        - name: biodiversity-be-deployment
+          image:  eu.gcr.io/prj-ext-prod-planet-bio-dr/biodiversity-backend/biodiversity-backend:latest
+          imagePullPolicy: "Always"
+          env:
+            - name: ES_CONNECTION_URL
+              value: null
+              valueFrom:
+                secretKeyRef:
+                  name: security-secret
+                  key: ES_CONNECTION_URL
+                  optional: false
+            - name: ES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: security-secret
+                  key: ES_USERNAME
+                  optional: false
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: security-secret
+                  key: ES_PASSWORD
+                  optional: false
+          ports:
+            - containerPort: 80
+

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: daphne-fe-deployment
+  labels:
+    app: daphne-fe-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: daphne-fe-deployment
+  # Pod template
+  template:
+    metadata:
+      labels:
+        app: daphne-fe-deployment
+    spec:
+      containers:
+        - name: daphne-deployment
+          image:  eu.gcr.io/prj-ext-prod-planet-bio-dr/biodiversity-front-end/biodiversity-front-end:latest
+          imagePullPolicy: "Always"
+          ports:
+           - containerPort: 80
